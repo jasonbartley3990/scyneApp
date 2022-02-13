@@ -12,12 +12,12 @@ import MobileCoreServices
 
 class FulllengthUploadViewController: UIViewController {
     
-    private let label: UILabel = {
+    private let introLabel: UILabel = {
         let label = UILabel()
         label.textColor = .white
         label.textAlignment = .center
         label.numberOfLines = 0
-        label.text = "The full length gallery is meant to be a collection of the hardwork and talents of the skateboarders out here in the streets all around the world. Videos are only accepted into the gallery if we feel time, effort and hardwork was put into the video. If your video was not accepted it is because we dont want the gallery to get over crowded, but instead focus a spotlight on cinematography we consider pieces of art. Skateshop videos and homie videos are most welcomed"
+        label.text = "The full length gallery is meant to be a collection of the hardwork and talents of the skateboarders out here in the streets all around the world. Videos are only accepted into the gallery if we feel time, effort and hardwork was put into the video. If your video was not accepted it is because we dont want the gallery to get over crowded, but instead focus a spotlight on cinematography we consider pieces of art. Skateshop videos are most welcomed"
         label.font = .systemFont(ofSize: 17, weight: .light)
         return label
     }()
@@ -27,6 +27,8 @@ class FulllengthUploadViewController: UIViewController {
         button.setTitle("select video", for: .normal)
         button.backgroundColor = .systemGreen
         button.setTitleColor(.white, for: .normal)
+        button.layer.cornerRadius = 8
+        button.clipsToBounds = true
         return button
     }()
     
@@ -34,7 +36,7 @@ class FulllengthUploadViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .black
-        view.addSubview(label)
+        view.addSubview(introLabel)
         view.addSubview(button)
         button.addTarget(self, action: #selector(didTapButton), for: .touchUpInside)
         
@@ -43,11 +45,11 @@ class FulllengthUploadViewController: UIViewController {
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        label.sizeToFit()
+        introLabel.sizeToFit()
         let labelY: CGFloat = view.height/6
         let buttonSize: CGFloat = 150
-        label.frame = CGRect(x: 20, y: labelY, width: (view.width - 40), height: 250)
-        button.frame = CGRect(x: (view.width - buttonSize)/2, y: label.bottom + 15, width: buttonSize, height: 40)
+        introLabel.frame = CGRect(x: 20, y: labelY, width: (view.width - 40), height: 280)
+        button.frame = CGRect(x: (view.width - buttonSize)/2, y: introLabel.bottom + 15, width: buttonSize, height: 40)
     }
     
     @objc func didTapButton() {

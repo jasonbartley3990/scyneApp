@@ -14,43 +14,28 @@ import JGProgressHUD
 
 class HomeViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UIScrollViewDelegate {
     
-    //MARK: collection view properties
-    
     //viewModels is where the collection view gets it data from, when the feed is changed (local posts, following posts, or top regional posts), the viewModels will be set to either localViewModels, followingViewModels or regionViewModels.
     
     private var viewModels = [[HomeFeedCellType]]()
-    
     private var localViewModels = [[HomeFeedCellType]]()
-    
     private var followingViewModel = [[HomeFeedCellType]]()
-    
     private var regionViewModels = [[HomeFeedCellType]]()
-    
     private var allPosts = [Post]()
-    
+    private var AllAds = [[HomeFeedCellType]]()
     private var collectionView: UICollectionView?
     
     private var didCallFollowing: Bool = false
-    
     private var didCallRegion: Bool = false
-    
     private var currentFeedLocal = true
-    
     private var currentFeedFollowing = false
-    
     private var currentFeedSpotlight = false
-    
     public var selectedRegion = ""
+    private var isCurrentViewController = false
     
     private var lastDocumentForLocal: DocumentSnapshot?
-    
     private var lastDocumentRegion: DocumentSnapshot?
     
-    private var AllAds = [[HomeFeedCellType]]()
-    
     private var currentIndex = 0
-    
-    private var isCurrentViewController = false
     
     private let spinner = JGProgressHUD(style: .dark)
     
@@ -61,6 +46,7 @@ class HomeViewController: UIViewController, UICollectionViewDelegate, UICollecti
       byAdding: .hour,
       value: -72,
       to: Date())
+    
     
     //MARK: check permission status properties
     
@@ -74,26 +60,11 @@ class HomeViewController: UIViewController, UICollectionViewDelegate, UICollecti
     private var locationAuthorizationStatus =  CLLocationManager.authorizationStatus()
     
     
-    
-    
+    //MARK: view lifecycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view.
-        title = "SCYNE"
-        view.backgroundColor = .systemBackground
-        
-        let camera = UIBarButtonItem(barButtonSystemItem: .camera, target: self, action: #selector(didTapAdd))
-        let spacer = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
-        let search = UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector(didTapSearch))
-        let feed = UIBarButtonItem(title: "feed", style: .done, target: self, action: #selector(didTapFeed))
-        navigationItem.rightBarButtonItems = [camera, feed, spacer]
-        navigationItem.leftBarButtonItems = [search, spacer]
-        
-        NotificationCenter.default.addObserver(self, selector: #selector(userDidPost), name: Notification.Name("didPost"), object: nil)
-        
-        NotificationCenter.default.addObserver(self, selector: #selector(needToUpdate), name: NSNotification.Name("didChangePost"), object: nil)
-        
+        initialSetUp()
         getAllAds()
         fetchLocalPosts()
         configureCollectionView()
@@ -127,6 +98,28 @@ class HomeViewController: UIViewController, UICollectionViewDelegate, UICollecti
     override func viewDidAppear(_ animated: Bool) {
         isCurrentViewController = true
     }
+    
+    
+    
+    //MARK: set up
+    
+    private func initialSetUp() {
+        title = "SCYNE"
+        view.backgroundColor = .systemBackground
+        
+        let camera = UIBarButtonItem(barButtonSystemItem: .camera, target: self, action: #selector(didTapAdd))
+        let spacer = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
+        let search = UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector(didTapSearch))
+        let feed = UIBarButtonItem(title: "feed", style: .done, target: self, action: #selector(didTapFeed))
+        navigationItem.rightBarButtonItems = [camera, feed, spacer]
+        navigationItem.leftBarButtonItems = [search, spacer]
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(userDidPost), name: Notification.Name("didPost"), object: nil)
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(needToUpdate), name: NSNotification.Name("didChangePost"), object: nil)
+    }
+    
+    
     
     //MARK: get local posts first and set collection view to display these post, and ads are inserted into list randomly
     
@@ -374,7 +367,6 @@ class HomeViewController: UIViewController, UICollectionViewDelegate, UICollecti
             
         })
         })
-        
         
     }
     

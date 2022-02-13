@@ -48,8 +48,6 @@ class AdvertisementHeaderCollectionViewCell: UICollectionViewCell {
         contentView.addSubview(companyLabel)
         contentView.addSubview(moreButton)
         moreButton.addTarget(self, action: #selector(didTapMore), for: .touchUpInside)
-        let tap = UITapGestureRecognizer(target: self, action: #selector(didTapCompany))
-        companyLabel.addGestureRecognizer(tap)
         companyLabel.isUserInteractionEnabled = true
     }
     
@@ -81,9 +79,5 @@ class AdvertisementHeaderCollectionViewCell: UICollectionViewCell {
     @objc func didTapMore() {
         guard let link = self.link else {return}
         delegate?.advertisementheaderDidTapMore(self, link: link)
-    }
-    
-    @objc func didTapCompany() {
-        
     }
 }

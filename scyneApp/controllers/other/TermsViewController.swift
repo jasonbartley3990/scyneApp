@@ -37,7 +37,7 @@ class TermsViewController: UIViewController {
         let label = UILabel()
         label.textColor = .label
         label.font = .systemFont(ofSize: 20, weight: .medium)
-        label.text = "AgreementTo Terms"
+        label.text = "Agreement To Terms"
         return label
     }()
     

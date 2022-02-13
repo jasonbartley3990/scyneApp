@@ -134,7 +134,6 @@ extension SinglePinViewController: SpotPreviewViewDelegate {
     }
     
     func SpotPreviewViewDelegateDidTapClose(_ SpotPreviewView: SpotPreviewView) {
-        print("definatly tapped")
         DispatchQueue.main.async { [weak self] in
             UIView.animate(withDuration: 0.4, animations: {
                 self?.childVC.view.alpha = 0

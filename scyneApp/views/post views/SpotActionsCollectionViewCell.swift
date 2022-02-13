@@ -25,8 +25,6 @@ class SpotActionsCollectionViewCell: UICollectionViewCell {
     
     public var index: Int?
     
-//    private let ABDButton = RightIcontextButton(frame: CGRect(x: 0, y: 0 , width: 130, height: 50))
-    
     public let pageTurner: UIPageControl = {
         let page = UIPageControl()
         page.hidesForSinglePage = true

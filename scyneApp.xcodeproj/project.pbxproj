@@ -102,7 +102,6 @@
 		727B15C62644403400CE2E35 /* ScyneFollowButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727B15C52644403400CE2E35 /* ScyneFollowButton.swift */; };
 		727B15C82644408D00CE2E35 /* HomeFeedCellType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727B15C72644408D00CE2E35 /* HomeFeedCellType.swift */; };
 		727B15CA264440F600CE2E35 /* settingsModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727B15C9264440F600CE2E35 /* settingsModels.swift */; };
-		727B15CC2644412B00CE2E35 /* PostType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727B15CB2644412B00CE2E35 /* PostType.swift */; };
 		727B15D0264441C500CE2E35 /* spotModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727B15CF264441C500CE2E35 /* spotModel.swift */; };
 		727B15D42644424700CE2E35 /* searchresultsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727B15D32644424700CE2E35 /* searchresultsViewController.swift */; };
 		727B15D82644447900CE2E35 /* SearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 727B15D72644447900CE2E35 /* SearchViewController.swift */; };
@@ -134,7 +133,6 @@
 		728A4CAA26442D830067D185 /* DatabaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 728A4CA926442D830067D185 /* DatabaseManager.swift */; };
 		728A4CAC26442D920067D185 /* AuthManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 728A4CAB26442D920067D185 /* AuthManager.swift */; };
 		728A4CAE26442DA40067D185 /* StorageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 728A4CAD26442DA40067D185 /* StorageManager.swift */; };
-		728A4CB026442DB30067D185 /* AnalyticsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 728A4CAF26442DB30067D185 /* AnalyticsManager.swift */; };
 		728A4CB226442DC20067D185 /* HapticsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 728A4CB126442DC20067D185 /* HapticsManager.swift */; };
 		728A4CB426442F290067D185 /* Post.swift in Sources */ = {isa = PBXBuildFile; fileRef = 728A4CB326442F290067D185 /* Post.swift */; };
 		728A4CB626442F330067D185 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 728A4CB526442F330067D185 /* User.swift */; };
@@ -296,7 +294,6 @@
 		727B15C52644403400CE2E35 /* ScyneFollowButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScyneFollowButton.swift; sourceTree = "<group>"; };
 		727B15C72644408D00CE2E35 /* HomeFeedCellType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeFeedCellType.swift; sourceTree = "<group>"; };
 		727B15C9264440F600CE2E35 /* settingsModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = settingsModels.swift; sourceTree = "<group>"; };
-		727B15CB2644412B00CE2E35 /* PostType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostType.swift; sourceTree = "<group>"; };
 		727B15CF264441C500CE2E35 /* spotModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = spotModel.swift; sourceTree = "<group>"; };
 		727B15D32644424700CE2E35 /* searchresultsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = searchresultsViewController.swift; sourceTree = "<group>"; };
 		727B15D72644447900CE2E35 /* SearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewController.swift; sourceTree = "<group>"; };
@@ -330,7 +327,6 @@
 		728A4CA926442D830067D185 /* DatabaseManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatabaseManager.swift; sourceTree = "<group>"; };
 		728A4CAB26442D920067D185 /* AuthManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthManager.swift; sourceTree = "<group>"; };
 		728A4CAD26442DA40067D185 /* StorageManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StorageManager.swift; sourceTree = "<group>"; };
-		728A4CAF26442DB30067D185 /* AnalyticsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyticsManager.swift; sourceTree = "<group>"; };
 		728A4CB126442DC20067D185 /* HapticsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HapticsManager.swift; sourceTree = "<group>"; };
 		728A4CB326442F290067D185 /* Post.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Post.swift; sourceTree = "<group>"; };
 		728A4CB526442F330067D185 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
@@ -564,29 +560,12 @@
 		72348A2D2672F780000DE6BB /* advertisement */ = {
 			isa = PBXGroup;
 			children = (
-				72348A2E2672F7C3000DE6BB /* advertismentHeaderViewModel.swift */,
-				72348A302672F8AA000DE6BB /* AdvertisementHeaderCollectionViewCell.swift */,
-				72CFABA2267419820020384D /* AdvertisementPageTurnerViewModel.swift */,
-				72CFABA42674199F0020384D /* pageTurnerCollectionViewCell.swift */,
-				72CFABA626741BCA0020384D /* AdvertisementWebLinkCollectionViewCell.swift */,
-				72CFABA826741E970020384D /* AdvertisementWebLinkViewModel.swift */,
+				72ABD5C027199B7400D9500B /* collection view cells */,
+				72ABD5BF27199AEE00D9500B /* add content */,
+				72ABD5BE27199A9000D9500B /* view models */,
 				72CFABAA26742F2B0020384D /* AdvertismentMenuViewController.swift */,
 				72CFABAC26750FDB0020384D /* createAdvertismentViewController.swift */,
 				72CFABAE2675150F0020384D /* viewAdViewController.swift */,
-				72CFABB0267515700020384D /* companyNameViewController.swift */,
-				72CFABB2267519BA0020384D /* SelectLogoViewController.swift */,
-				72CFABB4267521F20020384D /* SelectCompanyLinkViewController.swift */,
-				72CFABB6267530430020384D /* AdTypeViewController.swift */,
-				72CFABB8267532AC0020384D /* adVideoSelectorViewController.swift */,
-				72CFABBA267532C90020384D /* adPhotoSelectorViewController.swift */,
-				72CFABBC267536DA0020384D /* adVideoViewerViewController.swift */,
-				72CFABBE26753A930020384D /* adVideoProductLinkViewController.swift */,
-				72CFABC026754F840020384D /* adBottomLinkLabelViewController.swift */,
-				72CFABC2267554B20020384D /* adVideoCaptionViewController.swift */,
-				72CFABC426755D650020384D /* adPhotoAskForMoreViewController.swift */,
-				72CFABC626755FE20020384D /* adPhotoProductLinkViewController.swift */,
-				72CFABC8267562740020384D /* adPhotoBottomLinkLabelViewController.swift */,
-				72CFABCA267562D10020384D /* adPhotoCaptionViewController.swift */,
 				7216625D2684ECBC00746BDB /* ContactScyneViewController.swift */,
 			);
 			path = advertisement;
@@ -626,6 +605,16 @@
 				72348A00266D87C3000DE6BB /* CommentViewModel.swift */,
 			);
 			path = other;
+			sourceTree = "<group>";
+		};
+		7263758527B87E9100C387D0 /* Camera resources */ = {
+			isa = PBXGroup;
+			children = (
+				729A48002647571F00981959 /* captureSessionControllerForPhotoOnly.swift */,
+				729A47FC26474DF900981959 /* captureSessionController.swift */,
+				727B16112644CBFE00CE2E35 /* RequestCameraAuthorizations.swift */,
+			);
+			path = "Camera resources";
 			sourceTree = "<group>";
 		};
 		728A4C6E264429820067D185 = {
@@ -690,7 +679,6 @@
 				728A4CA926442D830067D185 /* DatabaseManager.swift */,
 				728A4CAB26442D920067D185 /* AuthManager.swift */,
 				728A4CAD26442DA40067D185 /* StorageManager.swift */,
-				728A4CAF26442DB30067D185 /* AnalyticsManager.swift */,
 				728A4CB126442DC20067D185 /* HapticsManager.swift */,
 				7216626F26A1112400746BDB /* infoManger.swift */,
 			);
@@ -716,7 +704,6 @@
 				728A4CBF264431B50067D185 /* UserInfo.swift */,
 				727B15C72644408D00CE2E35 /* HomeFeedCellType.swift */,
 				727B15C9264440F600CE2E35 /* settingsModels.swift */,
-				727B15CB2644412B00CE2E35 /* PostType.swift */,
 				727B15CF264441C500CE2E35 /* spotModel.swift */,
 				72707B812648AF86004B77EE /* spotAnnotation.swift */,
 				721DD2172656D72800DAA497 /* fullLength.swift */,
@@ -730,19 +717,17 @@
 		728A4C9326442B540067D185 /* resources */ = {
 			isa = PBXGroup;
 			children = (
+				7263758527B87E9100C387D0 /* Camera resources */,
 				728A4C7C264429820067D185 /* SceneDelegate.swift */,
 				728A4C7A264429820067D185 /* AppDelegate.swift */,
 				728A4C83264429830067D185 /* Assets.xcassets */,
 				728A4C85264429830067D185 /* LaunchScreen.storyboard */,
 				728A4CBD264431530067D185 /* extensions.swift */,
-				727B16112644CBFE00CE2E35 /* RequestCameraAuthorizations.swift */,
 				727B16132644CC6900CE2E35 /* RequestMicrophoneAuthorization.swift */,
 				727B16232645D6C400CE2E35 /* RequestPhotoLibraryAuthorization.swift */,
 				729A47E82646232700981959 /* TimerController.swift */,
 				729A47F02647275400981959 /* videoHelper.swift */,
 				729A47F62647311300981959 /* PlayVideoReferenceViewController.swift */,
-				729A47FC26474DF900981959 /* captureSessionController.swift */,
-				729A48002647571F00981959 /* captureSessionControllerForPhotoOnly.swift */,
 				729A47FE26474EA200981959 /* videoPreviewView.swift */,
 				723489E2266A8840000DE6BB /* firestoreDistributedCounter.swift */,
 				725E261526839DD100655BE5 /* urlOpener.swift */,
@@ -806,6 +791,47 @@
 				7216627126A1FB9700746BDB /* BlockedUsesViewController.swift */,
 			);
 			path = other;
+			sourceTree = "<group>";
+		};
+		72ABD5BE27199A9000D9500B /* view models */ = {
+			isa = PBXGroup;
+			children = (
+				72348A2E2672F7C3000DE6BB /* advertismentHeaderViewModel.swift */,
+				72CFABA2267419820020384D /* AdvertisementPageTurnerViewModel.swift */,
+				72CFABA826741E970020384D /* AdvertisementWebLinkViewModel.swift */,
+			);
+			path = "view models";
+			sourceTree = "<group>";
+		};
+		72ABD5BF27199AEE00D9500B /* add content */ = {
+			isa = PBXGroup;
+			children = (
+				72CFABC426755D650020384D /* adPhotoAskForMoreViewController.swift */,
+				72CFABC026754F840020384D /* adBottomLinkLabelViewController.swift */,
+				72CFABBC267536DA0020384D /* adVideoViewerViewController.swift */,
+				72CFABBA267532C90020384D /* adPhotoSelectorViewController.swift */,
+				72CFABC626755FE20020384D /* adPhotoProductLinkViewController.swift */,
+				72CFABC8267562740020384D /* adPhotoBottomLinkLabelViewController.swift */,
+				72CFABCA267562D10020384D /* adPhotoCaptionViewController.swift */,
+				72CFABC2267554B20020384D /* adVideoCaptionViewController.swift */,
+				72CFABBE26753A930020384D /* adVideoProductLinkViewController.swift */,
+				72CFABB6267530430020384D /* AdTypeViewController.swift */,
+				72CFABB8267532AC0020384D /* adVideoSelectorViewController.swift */,
+				72CFABB2267519BA0020384D /* SelectLogoViewController.swift */,
+				72CFABB4267521F20020384D /* SelectCompanyLinkViewController.swift */,
+				72CFABB0267515700020384D /* companyNameViewController.swift */,
+			);
+			path = "add content";
+			sourceTree = "<group>";
+		};
+		72ABD5C027199B7400D9500B /* collection view cells */ = {
+			isa = PBXGroup;
+			children = (
+				72CFABA626741BCA0020384D /* AdvertisementWebLinkCollectionViewCell.swift */,
+				72CFABA42674199F0020384D /* pageTurnerCollectionViewCell.swift */,
+				72348A302672F8AA000DE6BB /* AdvertisementHeaderCollectionViewCell.swift */,
+			);
+			path = "collection view cells";
 			sourceTree = "<group>";
 		};
 		CA48E56AFB6B6580953B64BA /* Pods */ = {
@@ -992,7 +1018,6 @@
 				723489EF266BE364000DE6BB /* fullLengthPosterCollectionViewCellViewModel.swift in Sources */,
 				7211E49F264DA66D00F14E9C /* messageRoomListViewController.swift in Sources */,
 				7216625E2684ECBC00746BDB /* ContactScyneViewController.swift in Sources */,
-				728A4CB026442DB30067D185 /* AnalyticsManager.swift in Sources */,
 				72CFABC9267562740020384D /* adPhotoBottomLinkLabelViewController.swift in Sources */,
 				728A4CA826442D540067D185 /* ListViewController.swift in Sources */,
 				728A4CD0264434980067D185 /* gearActionsCollectionViewCellViewModel.swift in Sources */,
@@ -1002,7 +1027,6 @@
 				72D231F7265EE90D009DF601 /* ClipAskForMoreVideosViewController.swift in Sources */,
 				728A4CA626442D000067D185 /* SettingsViewController.swift in Sources */,
 				728A4C9C26442CA10067D185 /* SpotLightViewController.swift in Sources */,
-				727B15CC2644412B00CE2E35 /* PostType.swift in Sources */,
 				72707B7A264874B8004B77EE /* SpotAskForMorePhotosViewController.swift in Sources */,
 				72348A1326701039000DE6BB /* normalPostActionsCollectionViewCellViewModel.swift in Sources */,
 				728A4CB226442DC20067D185 /* HapticsManager.swift in Sources */,
@@ -1264,7 +1288,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.0;
+				MARKETING_VERSION = 1.1;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.jkbartley25-yahoo.scyneApp";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -1288,7 +1312,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.0;
+				MARKETING_VERSION = 1.1;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.jkbartley25-yahoo.scyneApp";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";

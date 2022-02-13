@@ -40,7 +40,7 @@ class SignInViewController: UIViewController, UITextFieldDelegate {
         return field
     }()
     
-    private let signIButton: UIButton = {
+    private let signInButton: UIButton = {
         let button = UIButton()
         button.setTitle("sign in", for: .normal)
         button.backgroundColor = .systemBlue
@@ -65,7 +65,7 @@ class SignInViewController: UIViewController, UITextFieldDelegate {
         view.addSubview(emailField)
         view.addSubview(passwordField)
         view.addSubview(createAccountButton)
-        view.addSubview(signIButton)
+        view.addSubview(signInButton)
         
         emailField.delegate = self
         passwordField.delegate = self
@@ -79,13 +79,13 @@ class SignInViewController: UIViewController, UITextFieldDelegate {
         scyneImage.frame = CGRect(x: (view.width - ((view.height)/3.2))/2, y: view.safeAreaInsets.top - 30, width: (view.height)/3.2, height: (view.height)/3.2)
         emailField.frame = CGRect(x: 25, y: scyneImage.bottom - 30, width: view.width-50, height: 50)
         passwordField.frame = CGRect(x:25, y: emailField.bottom+10, width: view.width-50, height: 50)
-        signIButton.frame = CGRect(x:35, y: passwordField.bottom+20, width: view.width-70, height: 50)
-        createAccountButton.frame = CGRect(x: 35, y: signIButton.bottom+10, width: view.width-70, height: 50)
+        signInButton.frame = CGRect(x:35, y: passwordField.bottom+20, width: view.width-70, height: 50)
+        createAccountButton.frame = CGRect(x: 35, y: signInButton.bottom+10, width: view.width-70, height: 50)
         
     }
     
     private func addButtonActions() {
-        signIButton.addTarget(self, action: #selector(didTapSignIn), for: .touchUpInside)
+        signInButton.addTarget(self, action: #selector(didTapSignIn), for: .touchUpInside)
         createAccountButton.addTarget(self, action: #selector(didTapCreateAccount), for: .touchUpInside)
         
         

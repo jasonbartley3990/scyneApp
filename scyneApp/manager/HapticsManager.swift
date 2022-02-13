@@ -6,3 +6,22 @@
 //
 
 import Foundation
+import UIKit
+import CoreHaptics
+
+final class HapticsManager {
+    static let shared = HapticsManager()
+    
+    private init() {}
+    
+    public func buttonHaptic() {
+        DispatchQueue.main.async {
+            let selectionFeedbackgenerator = UISelectionFeedbackGenerator()
+            selectionFeedbackgenerator.prepare()
+            selectionFeedbackgenerator.selectionChanged()
+        }
+    }
+    
+    
+    
+}

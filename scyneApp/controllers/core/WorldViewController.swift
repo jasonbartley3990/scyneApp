@@ -56,6 +56,7 @@ class WorldViewController: UIViewController {
     
     
     private let locationManager = CLLocationManager()
+    
     private var currentLocation: CLLocationCoordinate2D?
     
     private let currentState = true
@@ -79,32 +80,10 @@ class WorldViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        //basic
-        title = "SPOTS"
-        view.backgroundColor = .systemBackground
-        view.addSubview(AuthorizationLabel)
-        view.addSubview(AuthorizationImageView)
-        view.addSubview(mapView)
-        view.addSubview(updateButton)
-        addChild(childVC)
-        view.addSubview(childVC.view)
-        childVC.didMove(toParent: self)
-        childVC.view.alpha = 0
-        childVC.view.isUserInteractionEnabled = false
-        childVC.delegate = self
-        updateButton.addTarget(self, action: #selector(didTapUpdate), for: .touchUpInside)
-        mapView.delegate = self
-        mapView.register(SpotAnnotationView.self, forAnnotationViewWithReuseIdentifier: MKMapViewDefaultAnnotationViewReuseIdentifier)
-        
-        //top configuration
-        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .camera, target: self, action: #selector(didTapAdd))
-        navigationItem.leftBarButtonItem = UIBarButtonItem(title: "refresh", style: .done, target: self, action: #selector(grabSpots))
-        
-        //map configuration
+        initialSetUp()
         configureLocationServices()
         grabSpots()
         addAnnotations()
-        
         
         let _ = Timer.scheduledTimer(timeInterval: 5.0, target: self, selector: #selector(stopUpdating), userInfo: nil, repeats: false)
         
@@ -131,6 +110,31 @@ class WorldViewController: UIViewController {
         let _ = Timer.scheduledTimer(timeInterval: 5.0, target: self, selector: #selector(stopUpdating), userInfo: nil, repeats: false)
         
     }
+    
+    //MARK: set up
+    
+    private func initialSetUp() {
+        title = "SPOTS"
+        view.backgroundColor = .systemBackground
+        view.addSubview(AuthorizationLabel)
+        view.addSubview(AuthorizationImageView)
+        view.addSubview(mapView)
+        view.addSubview(updateButton)
+        addChild(childVC)
+        view.addSubview(childVC.view)
+        childVC.didMove(toParent: self)
+        childVC.view.alpha = 0
+        childVC.view.isUserInteractionEnabled = false
+        childVC.delegate = self
+        updateButton.addTarget(self, action: #selector(didTapUpdate), for: .touchUpInside)
+        mapView.delegate = self
+        mapView.register(SpotAnnotationView.self, forAnnotationViewWithReuseIdentifier: MKMapViewDefaultAnnotationViewReuseIdentifier)
+        
+        //top configuration
+        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .camera, target: self, action: #selector(didTapAdd))
+        navigationItem.leftBarButtonItem = UIBarButtonItem(title: "refresh", style: .done, target: self, action: #selector(grabSpots))
+    }
+    
     
     //MARK: configure location services
     
