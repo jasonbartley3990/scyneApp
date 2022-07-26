@@ -52,8 +52,6 @@ class SpotDetailViewController: UIViewController, UICollectionViewDelegate, UICo
         fatalError("init(coder:) has not been implemented")
     }
     
-    
-    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -61,12 +59,10 @@ class SpotDetailViewController: UIViewController, UICollectionViewDelegate, UICo
         title = spot.nickName.uppercased()
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(didTapAdd))
         self.isSaved = spot.isSaved
-        print(isSaved)
         configureCollectionView()
         fetchSpotInfo()
         fetchPosts()
         blockedUsers = infoManager.shared.blockUsers
-        
         
     }
     
@@ -190,7 +186,6 @@ class SpotDetailViewController: UIViewController, UICollectionViewDelegate, UICo
                     
                     guard let profilePic = profilePictureUrl else {
                         group.leave()
-                        print("failer with profile photo")
                         return}
                     
                     guard let email = UserDefaults.standard.string(forKey: "email") else {
@@ -238,35 +233,32 @@ class SpotDetailViewController: UIViewController, UICollectionViewDelegate, UICo
                 
             })
         })
-        
-        
-        
     }
     
     private func blockAUser(email: String, currentEmail: String) {
-        let ac = UIAlertController(title: "are you sure?", message: nil, preferredStyle: .alert)
-        ac.addAction(UIAlertAction(title: "block", style: .destructive, handler: {
+        let ac = UIAlertController(title: "Are you sure?", message: nil, preferredStyle: .alert)
+        ac.addAction(UIAlertAction(title: "Block", style: .destructive, handler: {
             [weak self] _ in
             DatabaseManager.shared.blockUser(email: email, currentEmail: currentEmail, completion: {
                 [weak self] success in
                 if success {
                     NotificationCenter.default.post(name: Notification.Name("userDidChangeBlock"), object: nil)
-                    let ac = UIAlertController(title: "user blocked", message: "when app refreshes you will no longer see there content", preferredStyle: .alert)
-                    ac.addAction(UIAlertAction(title: "ok", style: .cancel, handler: nil))
+                    let ac = UIAlertController(title: "user blocked", message: "When app refreshes you will no longer see there content", preferredStyle: .alert)
+                    ac.addAction(UIAlertAction(title: "Ok", style: .cancel, handler: nil))
                     DispatchQueue.main.async {
                         self?.present(ac, animated: true)
                     }
                 }
             })
         }))
-        ac.addAction(UIAlertAction(title: "cancel", style: .cancel, handler: nil))
+        ac.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
         present(ac, animated: true)
     }
     
 
     @objc func didTapAdd() {
-        let ac = UIAlertController(title: "select an upload option", message: nil, preferredStyle: .actionSheet)
-        ac.addAction(UIAlertAction(title: "upload a clip to this spot", style: .default) { [weak self] _ in
+        let ac = UIAlertController(title: "Select an upload option", message: nil, preferredStyle: .actionSheet)
+        ac.addAction(UIAlertAction(title: "Upload a clip to this spot", style: .default) { [weak self] _ in
            
             guard self?.PhotoLibraryAuthorizationStatus == .granted else {
                 let vc = ClipCheckPermisssionsViewController(spot: self?.spot.spotId)
@@ -277,7 +269,7 @@ class SpotDetailViewController: UIViewController, UICollectionViewDelegate, UICo
             self?.navigationController?.pushViewController(vc, animated: true)
             
         })
-        ac.addAction(UIAlertAction(title: "cancel", style: .cancel))
+        ac.addAction(UIAlertAction(title: "Cancel", style: .cancel))
         present(ac, animated: true)
     }
     
@@ -443,7 +435,6 @@ class SpotDetailViewController: UIViewController, UICollectionViewDelegate, UICo
         
         if cell.reuseIdentifier == SingleVideoCollectionViewCell.identifier {
             guard let cell = cell as? SingleVideoCollectionViewCell else {return}
-            print("video will play")
             currentIndex = indexPath.row
             cell.index = indexPath.row
             if isCurrentViewController {
@@ -472,9 +463,7 @@ class SpotDetailViewController: UIViewController, UICollectionViewDelegate, UICo
                         
                     }
                 }
-                
             }
-
         }
         
         if cell.reuseIdentifier == PostActionCollectionViewCell.identifier {
@@ -507,7 +496,6 @@ class SpotDetailViewController: UIViewController, UICollectionViewDelegate, UICo
         let position = scrollView.contentOffset.y
         guard let collectionHeight = collectionView?.contentSize.height else { return }
         if position > collectionHeight - 100 - scrollView.frame.size.height {
-            print("aye we lit")
             
             guard let lastDocu = self.lastDocument else {return}
             guard let spot = self.spotId else {return}
@@ -541,7 +529,6 @@ class SpotDetailViewController: UIViewController, UICollectionViewDelegate, UICo
                         
                         guard let profilePic = profilePictureUrl else {
                             group.leave()
-                            print("failer with profile photo")
                             return}
                         
                         guard let email = UserDefaults.standard.string(forKey: "email") else {
@@ -600,13 +587,13 @@ extension SpotDetailViewController: PosterCollectionViewCellDelegate {
         guard let currentEmail = UserDefaults.standard.string(forKey: "email") else {return}
         
         if currentEmail == post.posterEmail {
-            let sheet = UIAlertController(title: "post action", message: nil, preferredStyle: .actionSheet)
-            sheet.addAction(UIAlertAction(title: "cancel", style: .cancel))
-            sheet.addAction(UIAlertAction(title: "delete post", style: .default, handler: {
+            let sheet = UIAlertController(title: "Post action", message: nil, preferredStyle: .actionSheet)
+            sheet.addAction(UIAlertAction(title: "Cancel", style: .cancel))
+            sheet.addAction(UIAlertAction(title: "Delete post", style: .default, handler: {
                 [weak self] _ in
                 if type == "clip" {
-                    let ac = UIAlertController(title: "are you sure?", message: nil, preferredStyle: .alert)
-                    ac.addAction(UIAlertAction(title: "delete", style: .default, handler: { [weak self] _ in
+                    let ac = UIAlertController(title: "Are you sure?", message: nil, preferredStyle: .alert)
+                    ac.addAction(UIAlertAction(title: "Delete", style: .default, handler: { [weak self] _ in
                         let postId = post.postId
                         DatabaseManager.shared.deleteClipOrNormalPost(postId: postId, completion: {
                             [weak self] success in
@@ -618,7 +605,7 @@ extension SpotDetailViewController: PosterCollectionViewCellDelegate {
                             }
                         })
                     }))
-                    ac.addAction(UIAlertAction(title: "cancel", style: .cancel, handler: nil))
+                    ac.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
                     self?.present(ac, animated: true)
                 }
                 
@@ -626,19 +613,19 @@ extension SpotDetailViewController: PosterCollectionViewCellDelegate {
             present(sheet, animated: true)
             
         } else {
-            let sheet = UIAlertController(title: "post action", message: nil, preferredStyle: .actionSheet)
-            sheet.addAction(UIAlertAction(title: "cancel", style: .cancel))
-            sheet.addAction(UIAlertAction(title: "block user", style: .default, handler: {
+            let sheet = UIAlertController(title: "Post action", message: nil, preferredStyle: .actionSheet)
+            sheet.addAction(UIAlertAction(title: "Cancel", style: .cancel))
+            sheet.addAction(UIAlertAction(title: "Block user", style: .default, handler: {
                 [weak self] _ in
                 guard let currentEmail = UserDefaults.standard.string(forKey: "email") else {return}
                 self?.blockAUser(email: post.posterEmail, currentEmail: currentEmail)
             }))
-            sheet.addAction(UIAlertAction(title: "report post", style: .destructive, handler: {
+            sheet.addAction(UIAlertAction(title: "Report post", style: .destructive, handler: {
                 [weak self] _ in
                 DatabaseManager.shared.reportPost(post: post, completion: {
                     [weak self] success in
-                    let ac = UIAlertController(title: "post reported", message: nil, preferredStyle: .alert)
-                    ac.addAction(UIAlertAction(title: "ok", style: .cancel))
+                    let ac = UIAlertController(title: "Post reported", message: nil, preferredStyle: .alert)
+                    ac.addAction(UIAlertAction(title: "Ok", style: .cancel))
                     DispatchQueue.main.async {
                         self?.present(ac,animated: true)
                     }
@@ -710,11 +697,6 @@ extension SpotDetailViewController: PostActionCollectionViewCellDelegate {
             NotificationCenter.default.post(name: Notification.Name("didChangePost"), object: nil)
             
         }
-        
-       
-        
-
-        
     }
     
     func postActionsCollectionViewCellDidTapPin(_ cell: PostActionCollectionViewCell, post: Post) {
@@ -727,24 +709,17 @@ extension SpotDetailViewController: PostActionCollectionViewCellDelegate {
             navigationController?.pushViewController(vc, animated: true)
             
         } else {
-            let ac = UIAlertController(title: "no spot info attached", message: nil, preferredStyle: .alert)
-            ac.addAction(UIAlertAction(title: "ok", style: .cancel))
+            let ac = UIAlertController(title: "No spot info attached", message: nil, preferredStyle: .alert)
+            ac.addAction(UIAlertAction(title: "Ok", style: .cancel))
             present(ac, animated: true)
         }
-        
     }
-    
-   
-    
-   
     
     func postActionsCollectionViewCellDidTapComment(_ cell: PostActionCollectionViewCell, post: Post) {
         let vc = commentViewController(post: post)
         navigationController?.pushViewController(vc, animated: true)
         
     }
-    
-    
 }
 
 extension SpotDetailViewController: PostCaptionCollectionViewCellDelegate {
@@ -752,9 +727,6 @@ extension SpotDetailViewController: PostCaptionCollectionViewCellDelegate {
         let vc = captionDetailViewController(caption: caption)
         navigationController?.pushViewController(vc, animated: true)
     }
-    
-    
-    
 }
 
 extension SpotDetailViewController: SpotHeaderCollectionReusableViewDelegate {
@@ -774,8 +746,6 @@ extension SpotDetailViewController: SpotHeaderCollectionReusableViewDelegate {
     }
     
     func SpotheaderCollectionReusableViewdidTapSave(_ header: SpotHeaderCollectionReusableView) {
-        print("saved tapped")
-        
         let currentSpot = self.spot
         
         spinner.show(in: view)
@@ -792,9 +762,7 @@ extension SpotDetailViewController: SpotHeaderCollectionReusableViewDelegate {
                 DispatchQueue.main.async {
                     self?.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "back", style: .done, target: self, action: #selector(self?.didTapBack))
                 }
-                print("success")
             } else {
-                print("failed to save")
                 DispatchQueue.main.async {
                     self?.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "back", style: .done, target: self, action: #selector(self?.didTapBack))
                 }
@@ -822,15 +790,15 @@ extension SpotDetailViewController: AdvertisementWebLinkCollectionViewCellDelega
 
 extension SpotDetailViewController: AdvertisementHeaderDelegate {
     func advertisementheaderDidTapMore(_ cell: AdvertisementHeaderCollectionViewCell, link: String) {
-        let ac = UIAlertController(title: "actions", message: nil, preferredStyle: .alert)
-        ac.addAction(UIAlertAction(title: "visit their website", style: .default, handler: {
+        let ac = UIAlertController(title: "Actions", message: nil, preferredStyle: .alert)
+        ac.addAction(UIAlertAction(title: "Visit their website", style: .default, handler: {
             [weak self] _ in
             if let url = URL(string: link) {
                 let safariVC = SFSafariViewController(url: url)
                 self?.present(safariVC, animated: true)
             }
         }))
-        ac.addAction(UIAlertAction(title: "cancel", style: .cancel, handler: nil))
+        ac.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
         present(ac, animated: true)
     }
 
@@ -858,7 +826,6 @@ extension SpotDetailViewController: SingleVideoCollectionViewCellDelegate {
             let actionIndex = IndexPath(row: (index + 1), section: 0)
             
             guard let cell = collectionView?.cellForItem(at: actionIndex) as? PostActionCollectionViewCell else {
-                print("returned")
                 return }
         
             
@@ -885,12 +852,7 @@ extension SpotDetailViewController: SingleVideoCollectionViewCellDelegate {
                 NotificationCenter.default.post(name: Notification.Name("didChangePost"), object: nil)
                 
             }
-        
-        
-        
     }
-    
-    
 }
 
 

@@ -111,7 +111,7 @@ class messageRoomListViewController: UIViewController {
                         self?.fetchedConversationsForDelete = finishLoadsForDelete
                         guard let fetchNum = self?.fetchedNumberForDelete else {return}
                         if finishLoadsForDelete > fetchNum {
-                            print("made it")
+                            //do nothing
                         } else {
                             dispatchGroupForDelete.leave()
                         }
@@ -190,7 +190,7 @@ class messageRoomListViewController: UIViewController {
                             self?.fetchedConversations = finishLoads
                             guard let fetchedNum = self?.fetchNumber else {return}
                             if finishLoads > fetchedNum {
-                                print("made it")
+                                //do nothing
                             } else {
                                 dispatchGroup.leave()
                             }
@@ -275,8 +275,6 @@ extension messageRoomListViewController: UITableViewDelegate, UITableViewDataSou
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let model = conversations[indexPath.row]
-        print("this is model CellForRow")
-        print(model)
         let cell = tableView.dequeueReusableCell(withIdentifier: ConversationTableViewCell.identifier, for: indexPath) as! ConversationTableViewCell
         cell.configure(with: model)
         return cell
@@ -316,25 +314,6 @@ extension messageRoomListViewController: UITableViewDelegate, UITableViewDataSou
     func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCell.EditingStyle {
         return .delete
     }
-    
-//    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
-//        if editingStyle == .delete {
-//            let conversationIdent = conversations[indexPath.row].id
-//
-//            tableView.beginUpdates()
-//
-//            DatabaseManager.shared.deleteConversation(conversationId: conversationIdent, completion: { [weak self]success in
-//                if success {
-//                    self?.conversations.remove(at: indexPath.row)
-//                    self?.tableView.deleteRows(at: [indexPath], with: .left)
-//                }
-//            })
-//
-//            tableView.endUpdates()
-//
-//
-//        }
-    //}
 }
 
 

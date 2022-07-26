@@ -37,7 +37,7 @@ class commentViewController: UIViewController, UITableViewDelegate, UITableViewD
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
-        title = "comments"
+        title = "COMMENTS"
         view.addSubview(tableView)
         tableView.delegate = self
         tableView.dataSource = self
@@ -50,8 +50,6 @@ class commentViewController: UIViewController, UITableViewDelegate, UITableViewD
     private func fetchComments() {
         DatabaseManager.shared.getCommentsForPost(post: post, completion: {
             [weak self] comments, lastDoc in
-            print("got here")
-            print(comments)
             self?.lastComment = lastDoc
             var filteredComments = comments
             for (index, post) in filteredComments.enumerated() {
@@ -119,8 +117,6 @@ class commentViewController: UIViewController, UITableViewDelegate, UITableViewD
         let position = scrollView.contentOffset.y
         let tableViewHeight = tableView.contentSize.height
         if position > tableViewHeight - 100 - scrollView.frame.size.height {
-            print("aye we lit")
-            
             guard !DatabaseManager.shared.isPaginating else  {
                 return
             }

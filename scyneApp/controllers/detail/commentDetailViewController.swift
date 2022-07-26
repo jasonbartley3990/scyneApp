@@ -36,8 +36,6 @@ class commentDetailViewController: UIViewController {
         view.backgroundColor = .systemBackground
         view.addSubview(label)
         label.text = comment.comment
-
-        
     }
     
     override func viewDidLayoutSubviews() {

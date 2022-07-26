@@ -154,6 +154,7 @@
 		728A4CDA264436C40067D185 /* ProfileHeaderCountViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 728A4CD9264436C40067D185 /* ProfileHeaderCountViewModel.swift */; };
 		728A4CDC264437120067D185 /* ProfileHeaderViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 728A4CDB264437120067D185 /* ProfileHeaderViewModel.swift */; };
 		728A4CE0264439330067D185 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 728A4CDF264439320067D185 /* GoogleService-Info.plist */; };
+		728CE3E7286B48710023C32B /* NoResultsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 728CE3E6286B48710023C32B /* NoResultsTableViewCell.swift */; };
 		729A47DF2645F71300981959 /* GearPermissionsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 729A47DE2645F71300981959 /* GearPermissionsViewController.swift */; };
 		729A47E92646232700981959 /* TimerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 729A47E82646232700981959 /* TimerController.swift */; };
 		729A47F12647275400981959 /* videoHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 729A47F02647275400981959 /* videoHelper.swift */; };
@@ -350,6 +351,7 @@
 		728A4CDF264439320067D185 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		728A4CE1264439370067D185 /* Pods_scyneApp.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Pods_scyneApp.framework; path = "../../../../Library/Developer/Xcode/DerivedData/scyneApp-bsoqmnwyrdxhkeglwsnpyaallcjr/Build/Products/Debug-iphoneos/Pods_scyneApp.framework"; sourceTree = "<group>"; };
 		728A4CE22644393C0067D185 /* Pods_scyneApp.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Pods_scyneApp.framework; path = "../../../Library/Developer/Xcode/DerivedData/scyneApp-bsoqmnwyrdxhkeglwsnpyaallcjr/Build/Products/Debug-iphoneos/Pods_scyneApp.framework"; sourceTree = "<group>"; };
+		728CE3E6286B48710023C32B /* NoResultsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoResultsTableViewCell.swift; sourceTree = "<group>"; };
 		729A47DE2645F71300981959 /* GearPermissionsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GearPermissionsViewController.swift; sourceTree = "<group>"; };
 		729A47E82646232700981959 /* TimerController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerController.swift; sourceTree = "<group>"; };
 		729A47F02647275400981959 /* videoHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = videoHelper.swift; sourceTree = "<group>"; };
@@ -542,6 +544,7 @@
 				72348A0A266E8DA8000DE6BB /* spotTableViewCell.swift */,
 				7216626126865AA500746BDB /* NotificationTableViewCell.swift */,
 				7216627326A1FCC500746BDB /* blockUserTableViewCell.swift */,
+				728CE3E6286B48710023C32B /* NoResultsTableViewCell.swift */,
 			);
 			path = other;
 			sourceTree = "<group>";
@@ -998,6 +1001,7 @@
 				725E26182684171300655BE5 /* CheckNormalPhotoLibraryAccessViewController.swift in Sources */,
 				727B15E22644497700CE2E35 /* GearCameraViewController.swift in Sources */,
 				728A4CAC26442D920067D185 /* AuthManager.swift in Sources */,
+				728CE3E7286B48710023C32B /* NoResultsTableViewCell.swift in Sources */,
 				728A4C7F264429820067D185 /* HomeViewController.swift in Sources */,
 				729A480526476A2F00981959 /* AskingPriceViewController.swift in Sources */,
 				728A4CAA26442D830067D185 /* DatabaseManager.swift in Sources */,
@@ -1208,7 +1212,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -1263,7 +1267,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
@@ -1281,7 +1285,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 6;
+				CURRENT_PROJECT_VERSION = 7;
 				DEVELOPMENT_TEAM = A9GZA44T6J;
 				INFOPLIST_FILE = scyneApp/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -1305,7 +1309,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 6;
+				CURRENT_PROJECT_VERSION = 7;
 				DEVELOPMENT_TEAM = A9GZA44T6J;
 				INFOPLIST_FILE = scyneApp/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (

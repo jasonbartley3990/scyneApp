@@ -13,9 +13,9 @@ class ChooseRegionWithCompletionViewController: UIViewController, UIPickerViewDe
     
     private let label: UILabel = {
         let label = UILabel()
-        label.text = "select skate scene region"
+        label.text = "Select skate scene region"
         label.textAlignment = .center
-        label.textColor = .black
+        label.textColor = .label
         label.font = .systemFont(ofSize: 18, weight: .regular)
         return label
     }()
@@ -36,7 +36,7 @@ class ChooseRegionWithCompletionViewController: UIViewController, UIPickerViewDe
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .black
+        view.backgroundColor = .systemBackground
         view.addSubview(label)
         view.addSubview(pickerView)
         view.addSubview(textField)
@@ -45,11 +45,10 @@ class ChooseRegionWithCompletionViewController: UIViewController, UIPickerViewDe
         pickerView.dataSource = self
         pickerView.delegate = self
         textField.delegate = self
-        textField.placeholder = "select region"
+        textField.placeholder = "Select Region"
         textField.inputView = pickerView
         
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "done", style: .done, target: self, action: #selector(didTapDone))
-        
         
     }
     

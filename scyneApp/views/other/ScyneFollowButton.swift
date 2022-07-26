@@ -46,15 +46,10 @@ final class ScyneFollowButton: UIButton {
         
         switch state {
         case .follow:
-            print("follow")
             layer.borderWidth = 0
         case .unfollow:
-            print("unfollow")
             layer.borderWidth = 0.5
             layer.borderColor = UIColor.secondaryLabel.cgColor
         }
     }
-    
-   
-
 }

@@ -16,7 +16,7 @@ class SignUpViewController: UIViewController, UITextFieldDelegate, UIImagePicker
     
     private let nameField: ScyneTextField = {
         let field = ScyneTextField()
-        field.placeholder = "enter your name"
+        field.placeholder = "Enter your name"
         field.keyboardType = .emailAddress
         field.returnKeyType = .next
         field.autocorrectionType = .no
@@ -25,7 +25,7 @@ class SignUpViewController: UIViewController, UITextFieldDelegate, UIImagePicker
     
     private let usernameField: ScyneTextField = {
         let field = ScyneTextField()
-        field.placeholder = "username"
+        field.placeholder = "Username"
         field.keyboardType = .default
         field.returnKeyType = .next
         field.autocorrectionType = .no
@@ -34,7 +34,7 @@ class SignUpViewController: UIViewController, UITextFieldDelegate, UIImagePicker
     
     private let emailField: ScyneTextField = {
         let field = ScyneTextField()
-        field.placeholder = "email address"
+        field.placeholder = "Email address"
         field.keyboardType = .emailAddress
         field.returnKeyType = .next
         field.autocorrectionType = .no
@@ -44,7 +44,7 @@ class SignUpViewController: UIViewController, UITextFieldDelegate, UIImagePicker
     
     private let passwordField: ScyneTextField = {
         let field = ScyneTextField()
-        field.placeholder = "password"
+        field.placeholder = "Password"
         field.keyboardType = .default
         field.returnKeyType = .continue
         field.autocorrectionType = .no
@@ -54,7 +54,7 @@ class SignUpViewController: UIViewController, UITextFieldDelegate, UIImagePicker
     
     private let signUpButton: UIButton = {
         let button = UIButton()
-        button.setTitle("sign up", for: .normal)
+        button.setTitle("Sign up", for: .normal)
         button.backgroundColor = .systemGreen
         button.layer.cornerRadius = 8
         button.layer.masksToBounds = true
@@ -66,7 +66,7 @@ class SignUpViewController: UIViewController, UITextFieldDelegate, UIImagePicker
         label.textAlignment = .center
         label.textColor = .white
         label.font = .systemFont(ofSize: 15, weight: .thin)
-        label.text = "by signing up you agree to our terms and conditions and privacy policy"
+        label.text = "By signing up you agree to our terms and conditions and privacy policy"
         label.numberOfLines = 2
         return label
     }()
@@ -88,9 +88,7 @@ class SignUpViewController: UIViewController, UITextFieldDelegate, UIImagePicker
     }()
     
     private var didAgree = false
-    
-    
-    
+
     public var completion: (() -> Void)?
     
     private let spinner = JGProgressHUD(style: .dark)
@@ -109,7 +107,7 @@ class SignUpViewController: UIViewController, UITextFieldDelegate, UIImagePicker
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        title = "sign up"
+        title = "SIGN UP"
         view.backgroundColor = .black
         //view.addSubview(profilePictureImageView)
         view.addSubview(nameField)
@@ -204,7 +202,7 @@ class SignUpViewController: UIViewController, UITextFieldDelegate, UIImagePicker
             
             spinner.dismiss()
             
-            let ac = UIAlertController(title: "empty fields", message: "please make sure all fields are filled out", preferredStyle: .alert )
+            let ac = UIAlertController(title: "Empty fields", message: "Please make sure all fields are filled out.", preferredStyle: .alert )
             ac.addAction(UIAlertAction(title: "ok", style: .cancel, handler: nil))
             DispatchQueue.main.async {
                 self.present(ac, animated: true)
@@ -224,7 +222,7 @@ class SignUpViewController: UIViewController, UITextFieldDelegate, UIImagePicker
         guard usernameResult else {
             spinner.dismiss()
             //username invalid
-            let ac = UIAlertController(title: "invalid username", message: "usernmaes must only contain letters and numbers, or underscores, and must be between 2 and 14 characters in length ", preferredStyle: .alert)
+            let ac = UIAlertController(title: "Invalid username", message: "Usernames must only contain letters and numbers, or underscores, and must be between 2 and 14 characters in length", preferredStyle: .alert)
             ac.addAction(UIAlertAction(title: "ok", style: .cancel, handler: nil))
             DispatchQueue.main.async {
                 self.present(ac, animated: true)
@@ -237,7 +235,7 @@ class SignUpViewController: UIViewController, UITextFieldDelegate, UIImagePicker
         guard passwordResult else {
             spinner.dismiss()
             //password not valid
-            let ac = UIAlertController(title: "invalid password", message: "please make sure password is longer than 8 characters, and contains at least one number, and one uppercase letter. No special charaters", preferredStyle: .alert)
+            let ac = UIAlertController(title: "Invalid password", message: "please make sure password is longer than 8 characters, and contains at least one number, and one uppercase letter. No special characters", preferredStyle: .alert)
             ac.addAction(UIAlertAction(title: "ok", style: .cancel, handler: nil))
             DispatchQueue.main.async {
                 self.present(ac, animated: true)
@@ -250,7 +248,7 @@ class SignUpViewController: UIViewController, UITextFieldDelegate, UIImagePicker
             //invalid email
             DispatchQueue.main.async {
                 self.spinner.dismiss()
-                let ac = UIAlertController(title: "invalid email", message: "please make sure you entered a valid email", preferredStyle: .alert)
+                let ac = UIAlertController(title: "Invalid email", message: "Please make sure you entered a valid email", preferredStyle: .alert)
                 ac.addAction(UIAlertAction(title: "ok", style: .cancel, handler: nil))
                 self.present(ac, animated: true)
             }
@@ -261,7 +259,7 @@ class SignUpViewController: UIViewController, UITextFieldDelegate, UIImagePicker
             //the user needs to agree to terms and conditions
             DispatchQueue.main.async {
                 self.spinner.dismiss()
-                let ac = UIAlertController(title: "please agree to terms and conditions", message: "please check the circle to agree to terms", preferredStyle: .alert)
+                let ac = UIAlertController(title: "Please agree to terms and conditions", message: "Please check the circle to agree to terms", preferredStyle: .alert)
                 ac.addAction(UIAlertAction(title: "ok", style: .cancel, handler: nil))
                 self.present(ac, animated: true)
             }
@@ -284,7 +282,7 @@ class SignUpViewController: UIViewController, UITextFieldDelegate, UIImagePicker
                         
                         //confirms that this is the username and password they want because they cannot change username or password in the first version
                         
-                        let ac = UIAlertController(title: "confirm", message: "username and email cannot be changed once account is created, do you wish to continue", preferredStyle: .alert)
+                        let ac = UIAlertController(title: "Confirm", message: "Username and email cannot be changed once account is created, do you wish to continue", preferredStyle: .alert)
                         ac.addAction(UIAlertAction(title: "sign up", style: .default, handler: {
                             [weak self] _ in
                             //sign in with auth manager
@@ -299,7 +297,6 @@ class SignUpViewController: UIViewController, UITextFieldDelegate, UIImagePicker
                                         DatabaseManager.shared.setUserInfoWithEmail(userInfo: newInfo, email: email, completion: {
                                             success in
                                             if success {
-                                                
                                                 print("success in setting data")
                                             } else {
                                                 print("no success")
@@ -320,7 +317,7 @@ class SignUpViewController: UIViewController, UITextFieldDelegate, UIImagePicker
                             
                             
                         }))
-                        ac.addAction(UIAlertAction(title: "cancel", style: .cancel, handler: nil))
+                        ac.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
                         DispatchQueue.main.async {
                             self?.present(ac, animated: true, completion: nil)
                         }
@@ -329,7 +326,7 @@ class SignUpViewController: UIViewController, UITextFieldDelegate, UIImagePicker
                         //username already in use
                         DispatchQueue.main.async {
                             self?.spinner.dismiss()
-                            let ac = UIAlertController(title: "username already in use", message: "pick another username", preferredStyle: .alert)
+                            let ac = UIAlertController(title: "Username already in use", message: "Pick another username", preferredStyle: .alert)
                             ac.addAction(UIAlertAction(title: "ok", style: .cancel, handler: nil))
                             DispatchQueue.main.async {
                                 self?.present(ac, animated: true)
@@ -341,7 +338,7 @@ class SignUpViewController: UIViewController, UITextFieldDelegate, UIImagePicker
                 //email already in use
                 DispatchQueue.main.async {
                     self?.spinner.dismiss()
-                    let ac = UIAlertController(title: "email in use", message: "pick another email", preferredStyle: .alert)
+                    let ac = UIAlertController(title: "Email in use", message: "Pick another email", preferredStyle: .alert)
                     ac.addAction(UIAlertAction(title: "ok", style: .cancel, handler: nil))
                     DispatchQueue.main.async {
                         self?.present(ac, animated: true)

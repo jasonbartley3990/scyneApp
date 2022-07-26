@@ -43,7 +43,6 @@ class SingleVideoCollectionViewCell: UICollectionViewCell {
     var count: Int = 0 {
         didSet {
             if count == 2 {
-                print("triggered")
                 hasBeenViewed = true
                 
                 guard let post = self.post else {return}
@@ -131,13 +130,11 @@ class SingleVideoCollectionViewCell: UICollectionViewCell {
     }
     
     public func startTimer() {
-        print("timer stated")
         timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(timerCounter), userInfo: nil, repeats: true)
         
     }
     
     @objc func timerCounter() {
-        print("count increase")
         count = count + 1
     }
     

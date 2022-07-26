@@ -85,7 +85,7 @@ class likerTableViewController: UIViewController {
     }
     
     private func userIsBlocked() {
-        let ac = UIAlertController(title: "this user is blocked", message: "if you wish to see this profile unblock them", preferredStyle: .alert)
+        let ac = UIAlertController(title: "This user is blocked", message: "If you wish to see this profile unblock them", preferredStyle: .alert)
         ac.addAction(UIAlertAction(title: "ok", style: .cancel, handler: nil))
         present(ac, animated: true)
     }

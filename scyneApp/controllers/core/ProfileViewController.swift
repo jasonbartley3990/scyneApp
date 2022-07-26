@@ -38,7 +38,16 @@ class ProfileViewController: UIViewController {
     private var isCurrentUser: Bool {
         return user.username.lowercased() == UserDefaults.standard.string(forKey: "username") ?? ""
     }
-
+    
+    private var noPostsLabel: UILabel = {
+        let label = UILabel()
+        label.text = "No posts"
+        label.font = .systemFont(ofSize: 24, weight: .regular)
+        label.textColor = .label
+        label.textAlignment = .center
+        label.isHidden = true
+        return label
+    }()
 
     init(user: User) {
         self.user = user
@@ -63,7 +72,6 @@ class ProfileViewController: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(didUnfollowSomeone), name: Notification.Name("didTapUnfollow"), object: nil)
 
         if isCurrentUser {
-            print("current user")
             NotificationCenter.default.addObserver(self, selector: #selector(userDidPost), name: Notification.Name("didPost"), object: nil)
             NotificationCenter.default.addObserver(self, selector: #selector(userDidRead), name: Notification.Name("didRead"), object: nil)
             updateFullLengthViews()
@@ -88,15 +96,14 @@ class ProfileViewController: UIViewController {
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         collectionView?.frame = view.bounds
+        noPostsLabel.frame = CGRect(x: 10, y: (view.height * 0.7) + 20, width: view.width - 20, height: 25)
     }
     
     //MARK: configure nav bar and get unread messages
 
 
     private func configureNavBar() {
-        print("configure")
         if isCurrentUser {
-            print("current user")
             let group = DispatchGroup()
             
             group.enter()
@@ -141,8 +148,6 @@ class ProfileViewController: UIViewController {
                 let gear = UIBarButtonItem(image: UIImage(systemName: "gear"), style: .done, target: self, action: #selector(self?.didTapSettings))
                 let notification = UIBarButtonItem(image: UIImage(systemName: "person"), style: .done, target: self, action: #selector(self?.didTapNotifications))
                 self?.navigationItem.leftBarButtonItems = [gear, notification, spacer]
-                
-                
             })
             
         } else {
@@ -160,13 +165,11 @@ class ProfileViewController: UIViewController {
 
 
     @objc func didTapMessage() {
-        print("message tapped")
         guard let email1 = UserDefaults.standard.string(forKey: "email") else {return}
 
         let email2 = user.email
         
         if email1 == email2 {
-            print("same person")
             //its the same person this function should fail
             return
         }
@@ -377,9 +380,14 @@ class ProfileViewController: UIViewController {
             }
             
             self?.headerViewModel?.clipCount = posts.count
-            print("posts: \(posts.count)")
             DispatchQueue.main.async {
-                self?.collectionView?.reloadData()
+                if posts.isEmpty {
+                    self?.configureForNoPosts()
+                    self?.collectionView?.reloadData()
+                } else {
+                    self?.collectionView?.reloadData()
+                    self?.configureForPosts()
+                }
             }
             
         })
@@ -429,6 +437,20 @@ class ProfileViewController: UIViewController {
             }
         }
         
+    }
+    
+    private func configureForNoPosts() {
+        DispatchQueue.main.async { [weak self] in
+            self?.noPostsLabel.isHidden = false
+            self?.collectionView?.isScrollEnabled = false
+        }
+    }
+    
+    private func configureForPosts() {
+        DispatchQueue.main.async { [weak self] in
+            self?.noPostsLabel.isHidden = true
+            self?.collectionView?.isScrollEnabled = true
+        }
     }
 
 }
@@ -509,8 +531,6 @@ func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPat
         navigationController?.pushViewController(vc, animated: true)
 
     } else if type == "gear" {
-        print("gear")
-        
         //show item detail view controller
         
         let vc = ItemDetailViewController(post: post)
@@ -527,7 +547,6 @@ func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPat
         }
         navigationController?.pushViewController(vc, animated: true)
     } else if type == "clip" {
-        print("clip")
         //show single clip view controller
         let vc = singleClipViewerViewController(post: post)
         navigationController?.pushViewController(vc, animated: true)
@@ -546,8 +565,7 @@ func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElem
     guard kind == UICollectionView.elementKindSectionHeader, let headerView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: ProfileHeaderCollectionReusableView.identifier, for: indexPath) as? ProfileHeaderCollectionReusableView else {
         return UICollectionReusableView()
     }
-    print("header index")
-    print(indexPath)
+   
     if let viewModel = headerViewModel {
         headerView.configure(with: viewModel)
         headerView.countContainerView.delegate = self
@@ -583,6 +601,7 @@ func configureCollectionView() {
     collectionView.register(ProfileHeaderCollectionReusableView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: ProfileHeaderCollectionReusableView.identifier)
     collectionView.backgroundColor = .systemBackground
     view.addSubview(collectionView)
+    view.addSubview(noPostsLabel)
     self.collectionView = collectionView
 }
 }
@@ -675,13 +694,10 @@ func profileHeaderCountViewDidTapUnfollow(_ countainerView: ProfileHeaderCountVi
             DispatchQueue.main.async {
                 self?.collectionView?.reloadData()
             }
-            
-            
         }
     }
 
 }
-
 
 }
 
@@ -701,7 +717,6 @@ extension ProfileViewController: ProfileHeaderCollectionReusableViewDelegate {
                present(vc, animated: true)
             }
         } else {
-            print("cant opemn url")
             DispatchQueue.main.async {
                 let ac = UIAlertController(title: "invalid url", message: nil, preferredStyle: .alert)
                 ac.addAction(UIAlertAction(title: "ok", style: .cancel, handler: nil))
@@ -731,7 +746,13 @@ extension ProfileViewController: ProfileHeaderCollectionReusableViewDelegate {
             [weak self] posts in
             self?.posts = posts
             DispatchQueue.main.async {
-                self?.collectionView?.reloadData()
+                if posts.isEmpty {
+                    self?.configureForNoPosts()
+                    self?.collectionView?.reloadData()
+                } else {
+                    self?.configureForPosts()
+                    self?.collectionView?.reloadData()
+                }
             }
         })
         
@@ -746,7 +767,13 @@ extension ProfileViewController: ProfileHeaderCollectionReusableViewDelegate {
             [weak self] posts in
             self?.posts = posts
             DispatchQueue.main.async {
-                self?.collectionView?.reloadData()
+                if posts.isEmpty {
+                    self?.configureForNoPosts()
+                    self?.collectionView?.reloadData()
+                } else {
+                    self?.configureForPosts()
+                    self?.collectionView?.reloadData()
+                }
             }
         })
 
@@ -759,9 +786,14 @@ extension ProfileViewController: ProfileHeaderCollectionReusableViewDelegate {
         DatabaseManager.shared.getAllSpotPostsForUser(email: user.email, completion: {
             [weak self] posts in
             self?.posts = posts
-            print("posts: \(posts.count)")
             DispatchQueue.main.async {
-                self?.collectionView?.reloadData()
+                if posts.isEmpty {
+                    self?.configureForNoPosts()
+                    self?.collectionView?.reloadData()
+                } else {
+                    self?.configureForPosts()
+                    self?.collectionView?.reloadData()
+                }
             }
         })
     }

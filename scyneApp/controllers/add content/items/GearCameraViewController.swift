@@ -43,8 +43,7 @@ class GearCameraViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        title = "take photo"
-        print("didLoad")
+        title = "TAKE PHOTO"
         view.backgroundColor = .black
         setUpNavBar()
         view.addSubview(videoPreviewLayer)
@@ -104,9 +103,7 @@ class GearCameraViewController: UIViewController {
     }
     
     @objc func didTapNext() {
-        guard let takenPhoto = self.captureSessionController.image else {return
-            print("opps")
-        }
+        guard let takenPhoto = self.captureSessionController.image else {return}
         let vc = GearAskForMorePhotoViewController(imageSelected: takenPhoto, images: self.images)
         self.images.append(takenPhoto)
         self.navigationController?.pushViewController(vc, animated: true)

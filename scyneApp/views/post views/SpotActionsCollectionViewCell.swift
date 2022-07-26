@@ -143,7 +143,7 @@ class SpotActionsCollectionViewCell: UICollectionViewCell {
     }
     
     @objc func didTapVideo() {
-        guard var spotPost = self.post else {return}
+        guard let spotPost = self.post else {return}
         delegate?.spotActionCollectionViewCellDidTapVideo(self, post: spotPost)
     }
     

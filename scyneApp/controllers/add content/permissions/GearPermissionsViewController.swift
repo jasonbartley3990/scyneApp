@@ -31,7 +31,7 @@ class GearPermissionsViewController: UIViewController {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFill
         imageView.image = UIImage(systemName: "photo.on.rectangle.fill")
-        imageView.tintColor = .white
+        imageView.tintColor = .label
         imageView.layer.masksToBounds = true
         return imageView
     }()
@@ -39,7 +39,7 @@ class GearPermissionsViewController: UIViewController {
     private let label: UILabel = {
         let label = UILabel()
         label.font = .systemFont(ofSize: 18, weight: .regular)
-        label.textColor = .white
+        label.textColor = .label
         label.textAlignment = .center
         label.text = "please update photo library access"
         return label
@@ -58,10 +58,10 @@ class GearPermissionsViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        view.backgroundColor = .systemBackground
         view.addSubview(button)
         view.addSubview(label)
         view.addSubview(imageView)
-        view.backgroundColor = .black
         button.addTarget(self, action: #selector(didTapUpdate), for: .touchUpInside)
         setUpViewForNextAuthorizationRequest()
         

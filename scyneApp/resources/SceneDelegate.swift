@@ -14,11 +14,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
         if AuthManager.shared.isSignedIn {
             //sign in UI
-            print("here if")
             window.rootViewController = TabBarViewController()
         } else {
             // sign in UI
-            print("here else ")
             let vc = SignInViewController()
             let navVc = UINavigationController(rootViewController: vc)
             window.rootViewController = navVc
@@ -26,6 +24,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
         window.makeKeyAndVisible()
         self.window = window
+        
     }
 
     func sceneDidDisconnect(_ scene: UIScene) {

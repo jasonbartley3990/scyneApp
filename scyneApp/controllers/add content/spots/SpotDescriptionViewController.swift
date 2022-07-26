@@ -23,7 +23,7 @@ class SpotDescriptionViewController: UIViewController, UITextViewDelegate {
     private let label: UILabel = {
         let label = UILabel()
         label.textAlignment = .center
-        label.textColor = .white
+        label.textColor = .label
         label.text = "(optional) write some info on the spot, to give a heads up to skaters viewing it"
         label.numberOfLines = 2
         label.font = .systemFont(ofSize: 18, weight: .light)
@@ -56,7 +56,7 @@ class SpotDescriptionViewController: UIViewController, UITextViewDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .black
+        view.backgroundColor = .systemBackground
         view.addSubview(textView)
         view.addSubview(label)
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "next", style: .done, target: self, action: #selector(didTapNext))

@@ -76,9 +76,9 @@ class SelectProfilePictureViewController: UIViewController, UIImagePickerControl
     }
     
     @objc func didTapImage() {
-        let sheet = UIAlertController(title: "profile picture", message:"how would you like to select a profile picture", preferredStyle: .actionSheet)
+        let sheet = UIAlertController(title: "Profile Picture", message:"How would you like to select a profile picture", preferredStyle: .actionSheet)
         sheet.addAction(UIAlertAction(title: "cancel", style: .cancel))
-        sheet.addAction(UIAlertAction(title: "take photo", style: .default, handler: {
+        sheet.addAction(UIAlertAction(title: "Take photo", style: .default, handler: {
             [weak self] _ in
             DispatchQueue.main.async {
                 let picker = UIImagePickerController()
@@ -89,7 +89,7 @@ class SelectProfilePictureViewController: UIViewController, UIImagePickerControl
             }
         }))
         
-        sheet.addAction(UIAlertAction(title: "choose photo", style: .default, handler: {
+        sheet.addAction(UIAlertAction(title: "Choose photo", style: .default, handler: {
             [weak self] _ in
             DispatchQueue.main.async {
                 let picker = UIImagePickerController()
@@ -114,7 +114,5 @@ class SelectProfilePictureViewController: UIViewController, UIImagePickerControl
         DispatchQueue.main.async {
             self.profilePictureImageView.image = image
         }
-        
     }
-       
 }

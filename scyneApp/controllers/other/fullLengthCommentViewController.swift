@@ -37,7 +37,7 @@ class fullLengthCommentViewController: UIViewController, UITableViewDataSource, 
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
-        title = "comments"
+        title = "COMMENTS"
         view.addSubview(tableView)
         tableView.delegate = self
         tableView.dataSource = self
@@ -50,8 +50,6 @@ class fullLengthCommentViewController: UIViewController, UITableViewDataSource, 
     private func fetchComments() {
         DatabaseManager.shared.getCommentsForFullLength(video: self.video, completion: {
             [weak self] comments, lastDoc in
-            print("got here")
-            print(comments)
             self?.lastComment = lastDoc
             var filteredComments = comments
             for (index, post) in filteredComments.enumerated() {
@@ -75,7 +73,6 @@ class fullLengthCommentViewController: UIViewController, UITableViewDataSource, 
             DispatchQueue.main.async {
                 self?.tableView.reloadData()
             }
-            
         }
         navigationController?.pushViewController(vc, animated: true)
     }
@@ -90,7 +87,6 @@ class fullLengthCommentViewController: UIViewController, UITableViewDataSource, 
         guard let cell = tableView.dequeueReusableCell(withIdentifier: CommentTableViewCell.identifier, for: indexPath) as? CommentTableViewCell else {
             fatalError()
         }
-        print("hey bayyyyy")
         let commentMade = comments[indexPath.row]
         let vm = CommentViewModel(poster: commentMade.poster, posterEmail: commentMade.posterEmail, comment: commentMade.comment)
         cell.configure(with: vm)
@@ -146,13 +142,9 @@ class fullLengthCommentViewController: UIViewController, UITableViewDataSource, 
                 DispatchQueue.main.async {
                     self?.tableView.reloadData()
                 }
-                
             })
-            
         }
-        }
-    
-
+    }
 }
 
 

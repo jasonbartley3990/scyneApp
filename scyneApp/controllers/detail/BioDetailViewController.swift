@@ -35,8 +35,7 @@ class BioDetailViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        title = "bio"
+        title = "BIO"
         view.backgroundColor = .systemBackground
         view.addSubview(label)
         label.text = bio

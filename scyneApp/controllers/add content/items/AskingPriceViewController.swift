@@ -50,7 +50,7 @@ class AskingPriceViewController: UIViewController, UITextFieldDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .black
+        view.backgroundColor = .systemBackground
         view.addSubview(label)
         view.addSubview(imageView)
         view.addSubview(priceTextField)

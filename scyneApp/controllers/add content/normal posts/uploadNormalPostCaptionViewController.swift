@@ -13,7 +13,7 @@ class uploadNormalPostCaptionViewController: UIViewController, UITextViewDelegat
     private let label: UILabel = {
         let label = UILabel()
         label.textAlignment = .center
-        label.textColor = .white
+        label.textColor = .label
         label.text = "caption"
         label.numberOfLines = 2
         label.font = .systemFont(ofSize: 18, weight: .light)
@@ -45,7 +45,7 @@ class uploadNormalPostCaptionViewController: UIViewController, UITextViewDelegat
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .black
+        view.backgroundColor = .systemBackground
 
         view.addSubview(textView)
         view.addSubview(label)

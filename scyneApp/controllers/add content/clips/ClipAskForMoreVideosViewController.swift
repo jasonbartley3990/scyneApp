@@ -31,7 +31,7 @@ class ClipAskForMoreVideosViewController: UIViewController {
         let label = UILabel()
         label.numberOfLines = 0
         label.textAlignment = .center
-        label.textColor = .white
+        label.textColor = .label
         label.font = .systemFont(ofSize: 18, weight: .regular)
         label.text = "do you wish to reselect the video?\notherwise press next"
         return label
@@ -62,7 +62,7 @@ class ClipAskForMoreVideosViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .black
+        view.backgroundColor = .systemBackground
         view.addSubview(retakeButton)
         view.addSubview(label)
         view.addSubview(videoView)

@@ -12,7 +12,7 @@ class ItemTypeViewController: UIViewController {
     private let questionLabel: UILabel = {
         let label = UILabel()
         label.font = .systemFont(ofSize: 19, weight: .regular)
-        label.textColor = .white
+        label.textColor = .label
         label.textAlignment = .center
         label.text = "what type of item is it?"
         return label
@@ -115,7 +115,7 @@ class ItemTypeViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .black
+        view.backgroundColor = .systemBackground
         view.addSubview(questionLabel)
         view.addSubview(shoeButton)
         view.addSubview(deckButton)

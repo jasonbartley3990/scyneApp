@@ -21,7 +21,7 @@ class TermsViewController: UIViewController {
         let label = UILabel()
         label.textColor = .label
         label.font = .systemFont(ofSize: 20, weight: .medium)
-        label.text = "scyne terms and conditions"
+        label.text = "SCYNE terms and conditions"
         return label
     }()
     
@@ -29,7 +29,7 @@ class TermsViewController: UIViewController {
         let label = UILabel()
         label.textColor = .label
         label.font = .systemFont(ofSize: 18, weight: .regular)
-        label.text = "effective July 14 2021"
+        label.text = "Effective July 14 2021"
         return label
     }()
     
@@ -226,7 +226,7 @@ class TermsViewController: UIViewController {
         let label = UILabel()
         label.textColor = .label
         label.font = .systemFont(ofSize: 20, weight: .medium)
-        label.text = "TERMS AND TERMINATION"
+        label.text = "MODIFICATION INTERUPTIONS"
         return label
     }()
     
@@ -355,7 +355,7 @@ class TermsViewController: UIViewController {
         label.textColor = .label
         label.numberOfLines = 2
         label.font = .systemFont(ofSize: 20, weight: .medium)
-        label.text = "contact us at scyneskateapp@gmail.com"
+        label.text = "Contact us at scyneskateapp@gmail.com"
         return label
     }()
     
@@ -364,13 +364,13 @@ class TermsViewController: UIViewController {
         label.textColor = .label
         label.textAlignment = .center
         label.font = .systemFont(ofSize: 15, weight: .medium)
-        label.text = "To view scyne privacy policy click link below"
+        label.text = "To view SCYNE privacy policy click link below"
         return label
     }()
     
     private let button: UIButton = {
         let button = UIButton()
-        button.setTitle("privacy Policy", for: .normal)
+        button.setTitle("Privacy Policy", for: .normal)
         button.setTitleColor(.label, for: .normal)
         button.backgroundColor = .systemBackground
         return button
@@ -382,7 +382,7 @@ class TermsViewController: UIViewController {
         super.viewDidLoad()
 
         view.backgroundColor = .systemBackground
-        title = "terms and conditions"
+        title = "Terms and Conditions"
         
         view.addSubview(scrollView)
         view.addSubview(button)
@@ -489,8 +489,7 @@ class TermsViewController: UIViewController {
                 self.present(vc, animated: true)
             }
         } else {
-            print("cant open url")
-            let ac = UIAlertController(title: "invalid url", message: nil, preferredStyle: .alert)
+            let ac = UIAlertController(title: "Invalid url", message: nil, preferredStyle: .alert)
             ac.addAction(UIAlertAction(title: "ok", style: .cancel, handler: nil))
             self.present(ac, animated: true)
         }

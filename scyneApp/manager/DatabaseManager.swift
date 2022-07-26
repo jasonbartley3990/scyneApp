@@ -1357,7 +1357,6 @@ final class DatabaseManager {
         ref.getDocuments(completion: {
             [weak self] snapshot, error in
             guard let clips = snapshot?.documents.compactMap({ Post(with: $0.data()) }), error == nil else {
-                print("completion: []")
                 completion([], nil)
                 self?.isPaginating = false
                 return
@@ -1378,7 +1377,6 @@ final class DatabaseManager {
         ref.getDocuments(completion: {
             [weak self] snapshot, error in
             guard let clips = snapshot?.documents.compactMap({ Post(with: $0.data()) }), error == nil else {
-                print("completion: []")
                 completion([], nil)
                 self?.isPaginating = false
                 return
@@ -1398,7 +1396,6 @@ final class DatabaseManager {
         ref.getDocuments(completion: {
             snapshot, error in
             guard let spot = snapshot?.documents.compactMap({ Post(with: $0.data()) }), error == nil else {
-                print("completion: []")
                 completion([])
                 return
             }
@@ -1673,7 +1670,6 @@ final class DatabaseManager {
                     return
                 }
                 var count = 0
-                print(convos)
                 for convo in convos {
                 
                     guard let sender = convo["sender"] as? String else {
@@ -1836,19 +1832,16 @@ final class DatabaseManager {
                 
                 let sentMessage = Message(sender: sender, messageId: id, sentDate: date, kind: finalKind)
                 messages.append(sentMessage)
-                print("message appended")
-                }
+            }
             
             group.notify(queue: .main, execute: {
                 completion(messages)
-                print(messages)
-                print("completed")
                 
             })
-            }
-        
-        
         }
+        
+        
+    }
     
     public func sendMessage(to conversation: String, newMessage: Message, name: String,otherUserUsername: String, otherUserEmail: String, completion: @escaping (Bool) -> Void) {
         
@@ -1986,9 +1979,9 @@ final class DatabaseManager {
                             
                         })
                 })
-                })
-    }
-)}
+            })
+        }
+    )}
     
     public func deleteConversation(conversationId: String, completion: @escaping (Bool) -> Void) {
         guard let email = UserDefaults.standard.string(forKey: "email") else {return}
@@ -2082,7 +2075,6 @@ final class DatabaseManager {
             if let err = err {
                 print(err.localizedDescription)
             }
-            print("success")
             
         }
             
@@ -2305,20 +2297,16 @@ final class DatabaseManager {
     
     
     public func findFullLengths(with videoPrefix: String, completion: @escaping ([FullLength]) -> Void) {
-        print("here")
         let videoPrefixLowercased = videoPrefix.lowercased()
         let ref = database.collection("FullLengths")
         ref.whereField("isAccepted", isEqualTo: true).whereField("videoNameLowercased", isGreaterThanOrEqualTo: videoPrefixLowercased).limit(to: 8).getDocuments(completion: { snapshot, error in
             guard let videos = snapshot?.documents.compactMap({ FullLength(with: $0.data()) }), error == nil else {
-                print("completion: []")
                 completion([])
                 return
             }
-            print(videos)
             let subset = videos.filter({
                 $0.videoName.lowercased().hasPrefix(videoPrefix.lowercased())
             })
-            print("subset: \(subset)")
             completion(subset)
         })
         
@@ -2331,10 +2319,8 @@ final class DatabaseManager {
             switch result {
             
             case .success(_):
-                print("success")
                 completion(true)
             case .failure(_):
-                print("failure")
                 completion(false)
             }
         })
@@ -2363,7 +2349,6 @@ final class DatabaseManager {
             switch result {
                 
             case .success(let count):
-                print(count)
                 completion(count)
             case .failure(_):
                 completion(0)
@@ -2404,7 +2389,6 @@ final class DatabaseManager {
             switch result {
             
             case .success(_):
-                print("success")
                 completion(true)
             case .failure(let error):
                 print("failure to do it \(error.localizedDescription)")
@@ -2435,7 +2419,6 @@ final class DatabaseManager {
         let ref = database.collection("FullLengths").whereField("posterEmail", isEqualTo: email).whereField("isAccepted", isEqualTo: true)
         ref.getDocuments(completion: { [weak self]snapshot, error in
             guard error == nil else {
-                print("error")
                 completion(false)
                 return
             }
@@ -2447,7 +2430,6 @@ final class DatabaseManager {
                 self?.getTotalViewsForFullLength(for: video.videoId, completion: {
                     [weak self] viewCount in
                     guard viewCount > video.viewers else {
-                        print("view count not larger")
                         completion(false)
                         return
                     }
@@ -2538,7 +2520,6 @@ final class DatabaseManager {
                 }
                 completion(ads)
             } else {
-                print("error in getting ads")
                 completion([])
                
             }
@@ -2580,7 +2561,6 @@ final class DatabaseManager {
         ref.getDocument(completion: {
             snapshot, error in
             guard error == nil else {
-                print("error in getting blockUsers")
                 completion(false)
                 return
             }
@@ -2662,8 +2642,51 @@ final class DatabaseManager {
         
     }
     
-  
-    
+    public func deleteAccount(email: String, completion: @escaping (Bool) -> Void) {
+        let batch = database.batch()
+        
+        let accountRef = database.collection("users").document(email)
+        batch.deleteDocument(accountRef)
+        
+        DatabaseManager.shared.getAllClipPostsForUser(email: email, completion: {
+            [weak self] posts in
+            for post in posts {
+                guard let postRef = self?.database.collection("posts").document(post.postId) else {
+                    completion(false)
+                    return
+                }
+                batch.deleteDocument(postRef)
+            }
+        })
+        
+        DatabaseManager.shared.getAllItemPostsForUser(email: email, completion: {
+            [weak self] posts in
+            for post in posts {
+                guard let postRef = self?.database.collection("posts").document(post.postId) else {
+                    completion(false)
+                    return
+                }
+                batch.deleteDocument(postRef)
+            }
+        })
+        
+        DatabaseManager.shared.getAllNormalPostsForUser(email: email, completion: {
+            [weak self] posts in
+            for post in posts {
+                guard let postRef = self?.database.collection("posts").document(post.postId) else {
+                    completion(false)
+                    return
+                }
+                batch.deleteDocument(postRef)
+            }
+        })
+        
+        
+        batch.commit(completion: {
+            error in
+            completion(error == nil)
+        })
+    }
     
 }
 

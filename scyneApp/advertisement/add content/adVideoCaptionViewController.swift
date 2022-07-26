@@ -166,7 +166,6 @@ class adVideoCaptionViewController: UIViewController {
                 DatabaseManager.shared.createAd(email: email, ad: newAd, completion: {
                     [weak self] success in
                     if success {
-                        print("database manager complete")
                         DispatchQueue.main.async {
                             self?.spinner.dismiss()
                             self?.tabBarController?.tabBar.isHidden = false

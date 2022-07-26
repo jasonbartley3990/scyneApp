@@ -21,8 +21,6 @@ class fullLengthTitleCollectionViewCell: UICollectionViewCell {
     override init(frame: CGRect) {
         super.init(frame: frame)
         contentView.addSubview(label)
-        
-        
     }
     
     required init?(coder: NSCoder) {
@@ -33,10 +31,7 @@ class fullLengthTitleCollectionViewCell: UICollectionViewCell {
         super.layoutSubviews()
         label.sizeToFit()
         label.frame = CGRect(x: (contentView.width - label.width)/2, y: 2, width: label.width , height: contentView.height)
-        
     }
-    
-    
     
     override func prepareForReuse() {
         label.text = nil

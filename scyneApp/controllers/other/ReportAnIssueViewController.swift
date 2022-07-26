@@ -14,7 +14,7 @@ class ReportAnIssueViewController: UIViewController, UITextViewDelegate {
         let label = UILabel()
         label.textAlignment = .center
         label.textColor = .label
-        label.text = "report an issue, type what you experienced"
+        label.text = "Report an issue, type what you experienced"
         label.numberOfLines = 1
         label.font = .systemFont(ofSize: 16, weight: .light)
         return label
@@ -78,8 +78,8 @@ class ReportAnIssueViewController: UIViewController, UITextViewDelegate {
             if success {
                 DispatchQueue.main.async {
                     self?.spinner.dismiss()
-                    let ac = UIAlertController(title: "issue reported thank you", message: nil, preferredStyle: .alert)
-                    ac.addAction(UIAlertAction(title: "ok", style: .cancel, handler: {
+                    let ac = UIAlertController(title: "Issue reported thank you", message: nil, preferredStyle: .alert)
+                    ac.addAction(UIAlertAction(title: "Ok", style: .cancel, handler: {
                         [weak self] _ in
                         self?.doneReporting()
                     }))
@@ -90,9 +90,6 @@ class ReportAnIssueViewController: UIViewController, UITextViewDelegate {
                 self?.spinner.dismiss()
             }
         })
-        
-        
-        
     }
     
     private func doneReporting() {
@@ -100,8 +97,4 @@ class ReportAnIssueViewController: UIViewController, UITextViewDelegate {
             self.navigationController?.popViewController(animated: true)
         }
     }
-    
-
-    
-
 }

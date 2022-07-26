@@ -34,8 +34,6 @@ class ProfileHeaderCountView: UIView {
         button.setTitleColor(.label, for: .normal)
         button.titleLabel?.numberOfLines = 2
         button.setTitle("-", for: .normal)
-//        button.layer.cornerRadius = 4
-//        button.layer.borderWidth = 0.5
         button.layer.borderColor = UIColor.tertiaryLabel.cgColor
         button.titleLabel?.textAlignment = .center
         return button
@@ -46,8 +44,6 @@ class ProfileHeaderCountView: UIView {
         button.setTitleColor(.label, for: .normal)
         button.titleLabel?.numberOfLines = 2
         button.setTitle("-", for: .normal)
-//        button.layer.cornerRadius = 4
-//        button.layer.borderWidth = 0.5
         button.layer.borderColor = UIColor.tertiaryLabel.cgColor
         button.titleLabel?.textAlignment = .center
         return button
@@ -58,9 +54,6 @@ class ProfileHeaderCountView: UIView {
         button.setTitleColor(.label, for: .normal)
         button.titleLabel?.numberOfLines = 2
         button.setTitle("-", for: .normal)
-//        button.layer.cornerRadius = 4
-//        button.layer.borderWidth = 0.5
-//        button.layer.borderColor = UIColor.tertiaryLabel.cgColor
         button.titleLabel?.textAlignment = .center
         return button
     }()
@@ -109,7 +102,6 @@ class ProfileHeaderCountView: UIView {
     }
     
     @objc func didTapActions() {
-        print(self.isFollowing)
         switch action {
         case .edit:
             delegate?.profileHeaderCountViewDidTapEditProfile(self)
@@ -130,7 +122,6 @@ class ProfileHeaderCountView: UIView {
             } else {
                 self.isFollowing = true
             }
-            print("atcq")
             actionButton.configure(for: self.isFollowing ? .unfollow : .follow)
         } }
     
@@ -159,7 +150,6 @@ class ProfileHeaderCountView: UIView {
             actionButton.layer.borderWidth = 0.5
             actionButton.layer.borderColor = UIColor.tertiaryLabel.cgColor
         case .follow(let isFollowing):
-            print(self.isFollowing)
             self.isFollowing = isFollowing
             actionButton.configure(for: isFollowing ? .unfollow : .follow)
            

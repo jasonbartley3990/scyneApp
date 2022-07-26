@@ -29,18 +29,13 @@ class messagePhotoViewerViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .black
+        view.backgroundColor = .systemBackground
         view.addSubview(imageView)
         imageView.sd_setImage(with: self.url, completed: nil)
-
-        
     }
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         imageView.frame = view.bounds
     }
-    
-
-
 }

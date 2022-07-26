@@ -16,7 +16,15 @@ class ResaleViewController: UIViewController, UISearchResultsUpdating {
     
     //MARK: resale properties
     
-    private var items: [Post] = []
+    private var items: [Post] = [] {
+        didSet {
+            if items.isEmpty {
+                showNoPostsInRegion()
+            } else {
+                showCollectionView()
+            }
+        }
+    }
     
     private var allLocalItems: [Post] = []
     
@@ -84,7 +92,25 @@ class ResaleViewController: UIViewController, UISearchResultsUpdating {
     
     private var blockUsers: [String] = []
     
+    private let inviteFriendsLabel: UILabel = {
+        let label = UILabel()
+        label.text = "Invite your friends to join SCYNE"
+        label.textColor = .label
+        label.textAlignment = .center
+        label.font = .systemFont(ofSize: 19, weight: .thin)
+        label.isHidden = true
+        return label
+    }()
     
+    private let noPostsInRegionLabel: UILabel = {
+        let label = UILabel()
+        label.text = "No items for sale in region!"
+        label.textColor = .label
+        label.textAlignment = .center
+        label.font = .systemFont(ofSize: 20, weight: .thin)
+        label.isHidden = true
+        return label
+    }()
     
 
     //MARK: authorization properties
@@ -117,12 +143,17 @@ class ResaleViewController: UIViewController, UISearchResultsUpdating {
         configureCollectionView()
         
         self.blockUsers = infoManager.shared.blockUsers
+        
        
     }
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        collectionView?.frame = view.bounds
+        collectionView?.frame = CGRect(x: 0, y: view.safeAreaInsets.top, width: view.width, height: (view.height - view.safeAreaInsets.top - view.safeAreaInsets.bottom))
+        noPostsInRegionLabel.frame = CGRect(x: 10, y: (view.height - 50)/2, width: view.width - 20, height: 25)
+        inviteFriendsLabel.frame = CGRect(x: 10, y: (noPostsInRegionLabel.bottom), width: view.width - 20, height: 25)
+        
+        
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -231,7 +262,6 @@ class ResaleViewController: UIViewController, UISearchResultsUpdating {
         
         
         guard let region = UserDefaults.standard.string(forKey: "region") else {
-            print("returned")
             return}
         
         let ac = UIAlertController(title: "filter by", message: nil, preferredStyle: .actionSheet)
@@ -246,7 +276,6 @@ class ResaleViewController: UIViewController, UISearchResultsUpdating {
             self?.isCurrentlyShirtFeed = false
             self?.isCurrentlyHeadwearFeed = false
             guard let boolean = self?.hasShoeBeenCalled else {
-                print("has been returned")
                 return}
             if boolean {
                 guard let allItems = self?.allShoeItems else {
@@ -413,17 +442,25 @@ class ResaleViewController: UIViewController, UISearchResultsUpdating {
                     guard let last = lastDoc else {
                         guard let allItemsDeck = self?.allDeckItems else {return}
                         self?.items = allItemsDeck
-                        DispatchQueue.main.async {
+                        if allItems.isEmpty {
+                            self?.showNoPostsInRegion()
+                        } else {
+                            self?.showCollectionView()
                             self?.collectionView?.reloadData()
                         }
-                        return}
+                        return
+                    }
                     self?.lastDocumentDeck = last
                     DispatchQueue.main.async {
                         self?.allDeckItems = allItems
                         self?.items = allItems
                         self?.hasDeckBeenCalled = true
-                        self?.collectionView?.reloadData()
-                        
+                        if allItems.isEmpty {
+                            self?.showNoPostsInRegion()
+                        } else {
+                            self?.showCollectionView()
+                            self?.collectionView?.reloadData()
+                        }
                     }
                 })
             }
@@ -446,7 +483,12 @@ class ResaleViewController: UIViewController, UISearchResultsUpdating {
                 DispatchQueue.main.async {
                     guard let allItems = self?.allTruckItems else {return}
                     self?.items = allItems
-                    self?.collectionView?.reloadData()
+                    if allItems.isEmpty {
+                        self?.showNoPostsInRegion()
+                    } else {
+                        self?.showCollectionView()
+                        self?.collectionView?.reloadData()
+                    }
                 }
             } else {
                 var allItems: [Post] = []
@@ -464,16 +506,25 @@ class ResaleViewController: UIViewController, UISearchResultsUpdating {
                     guard let last = lastDoc else {
                         guard let allItemsTruck = self?.allTruckItems else {return}
                         self?.items = allItemsTruck
-                        DispatchQueue.main.async {
+                        if allItems.isEmpty {
+                            self?.showNoPostsInRegion()
+                        } else {
+                            self?.showCollectionView()
                             self?.collectionView?.reloadData()
                         }
-                        return}
+                        return
+                    }
                     self?.lastDocumentTruck = last
                     DispatchQueue.main.async {
                         self?.allTruckItems = allItems
                         self?.items = allItems
                         self?.hasTruckBeenCalled = true
-                        self?.collectionView?.reloadData()
+                        if allItems.isEmpty {
+                            self?.showNoPostsInRegion()
+                        } else {
+                            self?.showCollectionView()
+                            self?.collectionView?.reloadData()
+                        }
                     }
                 })
             }
@@ -544,7 +595,12 @@ class ResaleViewController: UIViewController, UISearchResultsUpdating {
                 DispatchQueue.main.async {
                     guard let allItems = self?.allHeadgearItems else {return}
                     self?.items = allItems
-                    self?.collectionView?.reloadData()
+                    if allItems.isEmpty {
+                        self?.showNoPostsInRegion()
+                    } else {
+                        self?.showCollectionView()
+                        self?.collectionView?.reloadData()
+                    }
                 }
             } else {
                 var allItems: [Post] = []
@@ -564,15 +620,19 @@ class ResaleViewController: UIViewController, UISearchResultsUpdating {
                         DispatchQueue.main.async {
                             self?.collectionView?.reloadData()
                         }
-                        return}
+                        return
+                    }
                     self?.lastDocumentHeadwear = last
                     self?.allHeadgearItems = allItems
                     self?.items = allItems
                     self?.hasHeadgearBeenCalled = true
-                    DispatchQueue.main.async {
+                    
+                    if allItems.isEmpty {
+                        self?.showNoPostsInRegion()
+                    } else {
+                        self?.showCollectionView()
                         self?.collectionView?.reloadData()
                     }
-                    
                 })
             }
             
@@ -590,7 +650,12 @@ class ResaleViewController: UIViewController, UISearchResultsUpdating {
             DispatchQueue.main.async {
                 guard let allItems = self?.allLocalItems else {return}
                 self?.items = allItems
-                self?.collectionView?.reloadData()
+                if allItems.isEmpty {
+                    self?.showNoPostsInRegion()
+                } else {
+                    self?.showCollectionView()
+                    self?.collectionView?.reloadData()
+                }
             }
         }))
         ac.addAction(UIAlertAction(title: "cancel", style: .cancel, handler: nil))
@@ -624,29 +689,52 @@ class ResaleViewController: UIViewController, UISearchResultsUpdating {
         
         guard let region = UserDefaults.standard.string(forKey: "region") else { return }
         
-        print("region \(region)")
-        
         DatabaseManager.shared.getAllItemsForRegion(region: region, completion: { [weak self] items, lastDoc in
             var filteredItems = items
             for (index, post) in items.enumerated() {
-                guard let isBlocked = self?.blockUsers.contains(post.posterEmail) else {return}
+                guard let isBlocked = self?.blockUsers.contains(post.posterEmail) else {
+                    return
+                }
                 if isBlocked {
                     filteredItems.remove(at: index)
                 }
             }
             allItems = filteredItems
-            guard let last = lastDoc else {return}
+            guard let last = lastDoc else {
+                self?.showNoPostsInRegion()
+                return
+            }
             self?.items = allItems
             DispatchQueue.main.async {
                 self?.lastDocumentLocal = last
                 self?.allLocalItems = allItems
-                self?.collectionView?.reloadData()
+                if allItems.isEmpty {
+                    self?.showNoPostsInRegion()
+                } else {
+                    self?.showCollectionView()
+                    self?.collectionView?.reloadData()
+                }
                 
             }
         })
-    
     }
     
+    
+    private func showNoPostsInRegion() {
+        DispatchQueue.main.async { [weak self] in
+            self?.collectionView?.isHidden = true
+            self?.inviteFriendsLabel.isHidden = false
+            self?.noPostsInRegionLabel.isHidden = false
+        }
+    }
+    
+    private func showCollectionView() {
+        DispatchQueue.main.async { [weak self] in
+            self?.collectionView?.isHidden = false
+            self?.inviteFriendsLabel.isHidden = true
+            self?.noPostsInRegionLabel.isHidden = true
+        }
+    }
 }
 
 //MARK: collection view functions
@@ -948,6 +1036,8 @@ extension ResaleViewController {
         collectionView.register(PhotoCollectionViewCell.self, forCellWithReuseIdentifier: PhotoCollectionViewCell.identifier)
         collectionView.backgroundColor = .systemBackground
         view.addSubview(collectionView)
+        view.addSubview(noPostsInRegionLabel)
+        view.addSubview(inviteFriendsLabel)
         self.collectionView = collectionView
     }
 }

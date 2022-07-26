@@ -62,9 +62,6 @@ class GearActionsCollectionViewCell: UICollectionViewCell {
         let tapSave = UITapGestureRecognizer(target: self, action: #selector(didTapSave))
         saveLabel.addGestureRecognizer(tapSave)
         messageButton.addTarget(self, action: #selector(didTapMessageButton), for: .touchUpInside)
-       
-      
-        
     }
     
     required init?(coder: NSCoder) {
@@ -104,20 +101,16 @@ class GearActionsCollectionViewCell: UICollectionViewCell {
     
     @objc func didTapSave() {
         guard let saved = self.isSaved else {
-            print("saved messed up")
             return}
         if saved {
-            print("true")
             saveLabel.text = "save"
             saveLabel.textColor = .label
         } else {
-            print("false")
             saveLabel.text = "saved"
             saveLabel.textColor = .green
         }
         
         guard let itemPost = self.post else {
-            print("opps")
             return}
         
         delegate?.GearActionsCollectionViewCellDidTapSaveButton(self, isSaved: !saved, post: itemPost)
@@ -133,7 +126,5 @@ class GearActionsCollectionViewCell: UICollectionViewCell {
         } else {
             self.post?.savers.removeAll { $0 == email }
         }
-        
-        
     }
 }

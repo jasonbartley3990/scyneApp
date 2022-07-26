@@ -25,7 +25,7 @@ class FullLengthTitleViewController: UIViewController, UITextFieldDelegate {
     private let label: UILabel = {
         let label = UILabel()
         label.text = "name of video?"
-        label.textColor = .white
+        label.textColor = .label
         label.textAlignment = .center
         label.font = .systemFont(ofSize: 18, weight: .regular)
         return label
@@ -44,6 +44,7 @@ class FullLengthTitleViewController: UIViewController, UITextFieldDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        view.backgroundColor = .systemBackground
         view.addSubview(titleTextField)
         view.addSubview(label)
         titleTextField.delegate = self

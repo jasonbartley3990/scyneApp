@@ -182,7 +182,6 @@ class ProfileHeaderCollectionReusableView: UICollectionReusableView {
     }
     
     @objc func didTapClips() {
-        print("tapped")
         delegate?.ProfileHeaderViewCollectionReusableViewDidTapClips(self)
         
         DispatchQueue.main.async { [weak self] in
@@ -204,11 +203,9 @@ class ProfileHeaderCollectionReusableView: UICollectionReusableView {
             
         }
         
-        
     }
     
     @objc func didTapItems() {
-        print("tapped")
         delegate?.ProfileHeaderViewCollectionReusableViewDidTapItems(self)
         
         DispatchQueue.main.async { [weak self] in
@@ -229,9 +226,6 @@ class ProfileHeaderCollectionReusableView: UICollectionReusableView {
             self?.spotButton.tintColor = .systemGray
             
         }
-        
-        
-
 
     }
     
@@ -282,11 +276,6 @@ class ProfileHeaderCollectionReusableView: UICollectionReusableView {
             
             
         }
-        
-       
-        
-        
-
         
     }
 }

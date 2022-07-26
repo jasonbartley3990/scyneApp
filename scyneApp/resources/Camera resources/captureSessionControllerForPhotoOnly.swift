@@ -13,11 +13,7 @@ class CaptureSessionControllerForPhotoOnly: NSObject {
     
     private lazy var captureSession = AVCaptureSession()
     
-    var image: UIImage? {
-        didSet {
-            print("twas set")
-        }
-    }
+    var image: UIImage?
     
     private var output = AVCapturePhotoOutput()
 
@@ -33,8 +29,6 @@ class CaptureSessionControllerForPhotoOnly: NSObject {
     
     func stopRunning() {
         captureSession.stopRunning()
-        print("heyyyy ya")
-        
     }
     
     func photoTaken()  {

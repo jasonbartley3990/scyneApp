@@ -42,7 +42,7 @@ class singleClipViewerViewController: UIViewController, UICollectionViewDelegate
                     self?.collectionView?.reloadData()
                 }
             } else {
-                print("something went wrong")
+                self?.showAlert()
             }
         
     })
@@ -68,23 +68,31 @@ class singleClipViewerViewController: UIViewController, UICollectionViewDelegate
     }
     
     private func blockAUser(email: String, currentEmail: String) {
-        let ac = UIAlertController(title: "are you sure?", message: nil, preferredStyle: .alert)
-        ac.addAction(UIAlertAction(title: "block", style: .destructive, handler: {
+        let ac = UIAlertController(title: "Are you sure?", message: nil, preferredStyle: .alert)
+        ac.addAction(UIAlertAction(title: "Block", style: .destructive, handler: {
             [weak self] _ in
             DatabaseManager.shared.blockUser(email: email, currentEmail: currentEmail, completion: {
                 [weak self] success in
                 if success {
                     NotificationCenter.default.post(name: Notification.Name("userDidChangeBlock"), object: nil)
-                    let ac = UIAlertController(title: "user blocked", message: "when app refreshes you will no longer see there content", preferredStyle: .alert)
-                    ac.addAction(UIAlertAction(title: "ok", style: .cancel, handler: nil))
+                    let ac = UIAlertController(title: "User blocked", message: "When app refreshes you will no longer see there content", preferredStyle: .alert)
+                    ac.addAction(UIAlertAction(title: "Ok", style: .cancel, handler: nil))
                     DispatchQueue.main.async {
                         self?.present(ac, animated: true)
                     }
                 }
             })
         }))
-        ac.addAction(UIAlertAction(title: "cancel", style: .cancel, handler: nil))
+        ac.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
         present(ac, animated: true)
+    }
+    
+    private func showAlert() {
+        let ac = UIAlertController(title: "Something went wrong", message: "Please try again later", preferredStyle: .alert)
+        ac.addAction(UIAlertAction(title: "Ok", style: .cancel))
+        DispatchQueue.main.async {
+            self.present(ac,animated: true)
+        }
     }
     
     
@@ -93,7 +101,6 @@ class singleClipViewerViewController: UIViewController, UICollectionViewDelegate
         StorageManager.shared.profilePictureUrl(for: post.posterEmail) { [weak self] profilePictureUrl in
             
             guard let profilePic = profilePictureUrl else {
-                print("failer with profile photo")
                 completion(false)
                 return}
             
@@ -130,28 +137,17 @@ class singleClipViewerViewController: UIViewController, UICollectionViewDelegate
                     self?.viewModels.append(clipData)
                     completion(true)
         
-            })
+                })
             })
         }
-            
-    
     }
                                  
-                                 
-    
-    
-    
-    
-    
     func configureCollectionView() {
         let sectionHeight: CGFloat = 260 + view.width
         
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewCompositionalLayout(sectionProvider: {
             index, _ -> NSCollectionLayoutSection? in
-            
-            //item
-            
-            
+        
             let posterItem = NSCollectionLayoutItem(layoutSize: NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .absolute(60))
             )
             
@@ -165,10 +161,9 @@ class singleClipViewerViewController: UIViewController, UICollectionViewDelegate
             
             let timeStampItem = NSCollectionLayoutItem(layoutSize: NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .absolute(20)))
 
-            //group
             let group = NSCollectionLayoutGroup.vertical(layoutSize: NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .absolute(sectionHeight)), subitems: [posterItem, postItem, actionItem, titleItem, captionItem, timeStampItem]
             )
-            //section
+            
             let section = NSCollectionLayoutSection(group: group)
             section.contentInsets = NSDirectionalEdgeInsets(top: 3, leading: 0, bottom: 10, trailing: 0)
             return section
@@ -319,7 +314,6 @@ class singleClipViewerViewController: UIViewController, UICollectionViewDelegate
         
         if cell.reuseIdentifier == SingleVideoCollectionViewCell.identifier {
             guard let cell = cell as? SingleVideoCollectionViewCell else {return}
-            print("video paused bitch")
             cell.pauseVideo()
             cell.stopTimer()
         }
@@ -332,7 +326,6 @@ class singleClipViewerViewController: UIViewController, UICollectionViewDelegate
         
         if cell.reuseIdentifier == SingleVideoCollectionViewCell.identifier {
             guard let cell = cell as? SingleVideoCollectionViewCell else {return}
-            print("video will play")
             cell.playVideo()
             cell.startTimer()
             
@@ -383,18 +376,16 @@ class singleClipViewerViewController: UIViewController, UICollectionViewDelegate
 
 extension singleClipViewerViewController: PosterCollectionViewCellDelegate {
     func posterCollectionViewCellDidTapMore(_ cell: PosterCollectionViewCell, post: Post, type: String, index: Int) {
-        print("tapped more")
-        
         guard let currentEmail = UserDefaults.standard.string(forKey: "email") else {return}
         
         if currentEmail == post.posterEmail {
-            let sheet = UIAlertController(title: "post action", message: nil, preferredStyle: .actionSheet)
-            sheet.addAction(UIAlertAction(title: "cancel", style: .cancel))
-            sheet.addAction(UIAlertAction(title: "delete post", style: .default, handler: {
+            let sheet = UIAlertController(title: "Post action", message: nil, preferredStyle: .actionSheet)
+            sheet.addAction(UIAlertAction(title: "Cancel", style: .cancel))
+            sheet.addAction(UIAlertAction(title: "Delete post", style: .default, handler: {
                 [weak self] _ in
                 if type == "clip" {
-                    let ac = UIAlertController(title: "are you sure?", message: nil, preferredStyle: .alert)
-                    ac.addAction(UIAlertAction(title: "delete", style: .default, handler: { [weak self] _ in
+                    let ac = UIAlertController(title: "Are you sure?", message: nil, preferredStyle: .alert)
+                    ac.addAction(UIAlertAction(title: "Delete", style: .default, handler: { [weak self] _ in
                         let postId = post.postId
                         DatabaseManager.shared.deleteClipOrNormalPost(postId: postId, completion: {
                             [weak self] success in
@@ -403,12 +394,11 @@ extension singleClipViewerViewController: PosterCollectionViewCellDelegate {
                                 DispatchQueue.main.async {
                                     self?.tabBarController?.selectedIndex = 4
                                     self?.navigationController?.popToRootViewController(animated: false)
-                                    
                                 }
                             }
                         })
                     }))
-                    ac.addAction(UIAlertAction(title: "cancel", style: .cancel, handler: nil))
+                    ac.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
                     self?.present(ac, animated: true)
                 }
                 
@@ -416,47 +406,39 @@ extension singleClipViewerViewController: PosterCollectionViewCellDelegate {
             present(sheet, animated: true)
             
         } else {
-            let sheet = UIAlertController(title: "post action", message: nil, preferredStyle: .actionSheet)
-            sheet.addAction(UIAlertAction(title: "cancel", style: .cancel))
-            sheet.addAction(UIAlertAction(title: "block user", style: .default, handler: {
+            let sheet = UIAlertController(title: "Post action", message: nil, preferredStyle: .actionSheet)
+            sheet.addAction(UIAlertAction(title: "Cancel", style: .cancel))
+            sheet.addAction(UIAlertAction(title: "Block user", style: .default, handler: {
                 [weak self] _ in
                 guard let currentEmail = UserDefaults.standard.string(forKey: "email") else {return}
                 self?.blockAUser(email: post.posterEmail, currentEmail: currentEmail)
             }))
-            sheet.addAction(UIAlertAction(title: "report post", style: .destructive, handler: {
+            sheet.addAction(UIAlertAction(title: "Report post", style: .destructive, handler: {
                 [weak self] _ in
                 DatabaseManager.shared.reportPost(post: post, completion: {
                     [weak self] success in
-                    let ac = UIAlertController(title: "post reported", message: nil, preferredStyle: .alert)
-                    ac.addAction(UIAlertAction(title: "ok", style: .cancel))
+                    let ac = UIAlertController(title: "Post reported", message: nil, preferredStyle: .alert)
+                    ac.addAction(UIAlertAction(title: "Ok", style: .cancel))
                     DispatchQueue.main.async {
                         self?.present(ac,animated: true)
                     }
                 })
             }))
-            
             present(sheet, animated: true)
-            
         }
-        
-        
     }
     
     func posterCollectionViewCellDidUsername(_ cell: PosterCollectionViewCell, email: String, username: String, region: String) {
         let vc = ProfileViewController(user: User(username: username, email: email, region: region))
         navigationController?.pushViewController(vc, animated: true)
-        
     }
-    
     
 }
 
 extension singleClipViewerViewController: titleCollectionViewCellDelegate {
     func titleCollectionViewCellDelegateDidTapTitle(_ cell: titleCollectionViewCell) {
-        
+        //do nothing
     }
-    
-    
 }
 
 extension singleClipViewerViewController: PostActionCollectionViewCellDelegate {
@@ -504,11 +486,9 @@ extension singleClipViewerViewController: PostActionCollectionViewCellDelegate {
     func postActionsCollectionViewCellDidTapComment(_ cell: PostActionCollectionViewCell, post: Post) {
         let vc = commentViewController(post: post)
         navigationController?.pushViewController(vc, animated: true)
-        
     }
     
     func postActionsCollectionViewCellDidTapPin(_ cell: PostActionCollectionViewCell, post: Post) {
-        print("tapped")
         guard let spotId = post.spotId else {
             return
         }
@@ -529,14 +509,8 @@ extension singleClipViewerViewController: PostActionCollectionViewCellDelegate {
                 ac.addAction(UIAlertAction(title: "ok", style: .cancel))
                 self?.present(ac, animated: true)
             }
-            
         }
-        
     }
-    
-    
-    
-    
 }
 
 
@@ -545,9 +519,6 @@ extension singleClipViewerViewController: PostCaptionCollectionViewCellDelegate 
         let vc = captionDetailViewController(caption: caption)
         navigationController?.pushViewController(vc, animated: true)
     }
-    
-   
-    
 }
 
 extension singleClipViewerViewController: SingleVideoCollectionViewCellDelegate {
@@ -578,12 +549,7 @@ extension singleClipViewerViewController: SingleVideoCollectionViewCellDelegate 
             cell.updateLikeLabel(with: currentEmail)
             let likers = cell.likers
             self.viewModels[0][2] = HomeFeedCellType.postActions(viewModel: PostActionsCollectionViewCellViewModel(isLiked: true, likeCount: likers.count, viewCount: cell.viewers, post: post, likers: likers))
-            
         }
-        
-        
     }
-    
-    
 }
 

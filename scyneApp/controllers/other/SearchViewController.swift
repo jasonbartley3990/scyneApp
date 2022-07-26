@@ -17,7 +17,7 @@ class SearchViewController: UIViewController, UISearchResultsUpdating {
         view.backgroundColor = .systemBackground
         (searchVC.searchResultsController as? searchresultsViewController)?.delegate = self
         searchVC.searchResultsUpdater = self
-        searchVC.searchBar.placeholder = "search for users"
+        searchVC.searchBar.placeholder = "Search For Users"
         navigationItem.searchController = searchVC
         blockedUsers = infoManager.shared.blockUsers
         
@@ -38,7 +38,7 @@ class SearchViewController: UIViewController, UISearchResultsUpdating {
     }
     
     private func userIsBlocked() {
-        let ac = UIAlertController(title: "this user is blocked", message: "if you wish to see this profile unblock them", preferredStyle: .alert)
+        let ac = UIAlertController(title: "This user is blocked", message: "If you wish to see this profile unblock them", preferredStyle: .alert)
         ac.addAction(UIAlertAction(title: "ok", style: .cancel, handler: nil))
         present(ac, animated: true)
     }

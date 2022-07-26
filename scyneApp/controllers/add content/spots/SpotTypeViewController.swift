@@ -32,7 +32,7 @@ class SpotTypeViewController: UIViewController {
     private let questionLabel: UILabel = {
         let label = UILabel()
         label.font = .systemFont(ofSize: 19, weight: .regular)
-        label.textColor = .white
+        label.textColor = .label
         label.textAlignment = .center
         label.text = "what type of spot is it?"
         return label
@@ -138,12 +138,9 @@ class SpotTypeViewController: UIViewController {
     }
     
     
-    
-    
-    
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .black
+        view.backgroundColor = .systemBackground
         view.addSubview(imageView)
         view.addSubview(label)
         view.addSubview(questionLabel)

@@ -55,11 +55,8 @@ final class AuthManager {
                 UserDefaults.standard.setValue(user.region, forKey: "region")
                 completion(.success(user))
             }
-            
-        
-        
-        
     }
+        
     }
     
     public func signUp(email: String, userName: String, password: String, profilePicture: Data?, region: String, completion: @escaping (Result<User, Error>) -> Void) {
@@ -87,6 +84,18 @@ final class AuthManager {
                     completion(.failure(AuthError.newUserCreation))
                 }
             }
+        }
+    }
+    
+    public func deleteAUser(completion: @escaping (Bool) -> Void) {
+        let user = Auth.auth().currentUser
+
+        user?.delete { error in
+          if error != nil {
+            completion(false)
+          } else {
+            completion(true)
+          }
         }
     }
     

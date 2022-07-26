@@ -43,7 +43,7 @@ class SpotCameraViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        title = "take photo"
+        title = "TAKE PHOTO"
         view.backgroundColor = .black
         setUpNavBar()
         view.addSubview(videoPreviewLayer)

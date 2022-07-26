@@ -57,9 +57,5 @@ class blockUserTableViewCell: UITableViewCell {
                 }
             }
         )
-            
-        
     }
-    
-
 }

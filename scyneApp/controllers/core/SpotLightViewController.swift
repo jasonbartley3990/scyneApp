@@ -371,7 +371,7 @@ class SpotLightViewController: UIViewController, UICollectionViewDelegate, UICol
     
     @objc func didTapSearchButton() {
         let vc = FullLengthSearchViewController()
-        vc.title = "search"
+        vc.title = "SEARCH"
         navigationController?.pushViewController(vc, animated: true)
     }
     
@@ -660,7 +660,6 @@ class SpotLightViewController: UIViewController, UICollectionViewDelegate, UICol
         
             
             guard !DatabaseManager.shared.isPaginating else  {
-                print("nope")
                 return
                 
             }
@@ -679,7 +678,6 @@ class SpotLightViewController: UIViewController, UICollectionViewDelegate, UICol
                 
                     videos.forEach({ video in
                         group.enter()
-                        print("sup")
                         
                         guard let thumbnailUrl = URL(string: video.thumbnailString) else {
                             group.leave()
@@ -879,7 +877,7 @@ extension SpotLightViewController: titleCollectionViewCellDelegate {
 
 extension SpotLightViewController: PostCollectionViewCellDelegate {
     func postCollectionViewCellDidLike(_ cell: PostCollectionViewCell, post: FullLength, index: Int) {
-        print("does nothing")
+        //do nothing
     
     }
     
@@ -888,7 +886,6 @@ extension SpotLightViewController: PostCollectionViewCellDelegate {
 extension SpotLightViewController: fullLengthActionCollectionViewCellDelegate {
     
     func fullLengthActionDidTapViews(_ cell: fullLengthActionCollectionViewCell, views: Int, likers: [String]) {
-        
         //go to liker view table to view likers and total number of views
         
         let vc = likerTableViewController(likers: likers, likeCount: likers.count)

@@ -104,13 +104,12 @@ class SelectRegionViewController: UIViewController, UIPickerViewDelegate, UIPick
         guard let bool = textField.text?.isEmpty else {return}
         
         if bool {
-            let ac = UIAlertController(title: "nothing entered", message: "please select the nearest region", preferredStyle: .alert)
+            let ac = UIAlertController(title: "Nothing entered", message: "Please select the nearest region", preferredStyle: .alert)
             ac.addAction(UIAlertAction(title: "ok", style: .cancel, handler: nil))
             present(ac, animated: true)
         }
         
         guard let text = textField.text else {return}
-        
         
         let vc = SelectProfilePictureViewController(region: text)
         navigationController?.pushViewController(vc, animated: true)

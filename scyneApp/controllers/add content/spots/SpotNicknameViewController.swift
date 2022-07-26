@@ -39,7 +39,7 @@ class SpotNicknameViewController: UIViewController, UITextFieldDelegate {
         let label = UILabel()
         label.numberOfLines = 1
         label.textAlignment = .center
-        label.textColor = .white
+        label.textColor = .label
         label.text = "give it a nickname"
         label.font = .systemFont(ofSize: 20, weight: .regular)
         return label
@@ -48,7 +48,7 @@ class SpotNicknameViewController: UIViewController, UITextFieldDelegate {
     private let exampleLabel: UILabel = {
         let label = UILabel()
         label.textAlignment = .center
-        label.textColor = .white
+        label.textColor = .label
         label.text = "ex: \"brooklyn banks\", \"5th st ledge\""
         label.font = .systemFont(ofSize: 15, weight: .light)
         label.numberOfLines = 1
@@ -70,7 +70,7 @@ class SpotNicknameViewController: UIViewController, UITextFieldDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .black
+        view.backgroundColor = .systemBackground
         view.addSubview(label)
         view.addSubview(exampleLabel)
         view.addSubview(nickTextField)

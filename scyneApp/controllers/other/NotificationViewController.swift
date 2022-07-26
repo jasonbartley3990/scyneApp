@@ -30,7 +30,7 @@ class NotificationViewController: UIViewController, UITableViewDelegate, UITable
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
-        title = "follows"
+        title = "FOLLOWS"
         view.addSubview(tableView)
         view.addSubview(noFollowsLabel)
         tableView.delegate = self

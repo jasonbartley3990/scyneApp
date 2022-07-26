@@ -14,7 +14,7 @@ class FulllengthUploadViewController: UIViewController {
     
     private let introLabel: UILabel = {
         let label = UILabel()
-        label.textColor = .white
+        label.textColor = .label
         label.textAlignment = .center
         label.numberOfLines = 0
         label.text = "The full length gallery is meant to be a collection of the hardwork and talents of the skateboarders out here in the streets all around the world. Videos are only accepted into the gallery if we feel time, effort and hardwork was put into the video. If your video was not accepted it is because we dont want the gallery to get over crowded, but instead focus a spotlight on cinematography we consider pieces of art. Skateshop videos are most welcomed"
@@ -35,7 +35,7 @@ class FulllengthUploadViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .black
+        view.backgroundColor = .systemBackground
         view.addSubview(introLabel)
         view.addSubview(button)
         button.addTarget(self, action: #selector(didTapButton), for: .touchUpInside)

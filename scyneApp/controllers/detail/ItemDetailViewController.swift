@@ -39,20 +39,13 @@ class ItemDetailViewController: UIViewController, UICollectionViewDelegate, UICo
         createViewModel(post: self.post, completion: {
             [weak self] success in
             if success {
-                print(success)
                 DispatchQueue.main.async { [weak self] in
                     self?.collectionView?.reloadData()
                 }
             } else {
-                print("something went wrong")
+                self?.showAlert()
             }
-            
-            
         })
-
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
     }
     
     override func viewDidLayoutSubviews() {
@@ -61,14 +54,14 @@ class ItemDetailViewController: UIViewController, UICollectionViewDelegate, UICo
     }
     
     private func blockAUser(email: String, currentEmail: String) {
-        let ac = UIAlertController(title: "are you sure?", message: nil, preferredStyle: .alert)
-        ac.addAction(UIAlertAction(title: "block", style: .destructive, handler: {
+        let ac = UIAlertController(title: "Are you sure?", message: nil, preferredStyle: .alert)
+        ac.addAction(UIAlertAction(title: "Block", style: .destructive, handler: {
             [weak self] _ in
             DatabaseManager.shared.blockUser(email: email, currentEmail: currentEmail, completion: {
                 [weak self] success in
                 if success {
                     NotificationCenter.default.post(name: Notification.Name("userDidChangeBlock"), object: nil)
-                    let ac = UIAlertController(title: "user blocked", message: "when app refreshes you will no longer see there content", preferredStyle: .alert)
+                    let ac = UIAlertController(title: "User blocked", message: "When app refreshes you will no longer see there content", preferredStyle: .alert)
                     ac.addAction(UIAlertAction(title: "ok", style: .cancel, handler: nil))
                     DispatchQueue.main.async {
                         self?.present(ac, animated: true)
@@ -76,8 +69,16 @@ class ItemDetailViewController: UIViewController, UICollectionViewDelegate, UICo
                 }
             })
         }))
-        ac.addAction(UIAlertAction(title: "cancel", style: .cancel, handler: nil))
+        ac.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
         present(ac, animated: true)
+    }
+    
+    private func showAlert() {
+        let ac = UIAlertController(title: "Something went wrong", message: "Please try again later", preferredStyle: .alert)
+        ac.addAction(UIAlertAction(title: "Ok", style: .cancel))
+        DispatchQueue.main.async {
+            self.present(ac,animated: true)
+        }
     }
     
     func configureCollectionView() {
@@ -85,9 +86,6 @@ class ItemDetailViewController: UIViewController, UICollectionViewDelegate, UICo
         
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewCompositionalLayout(sectionProvider: {
             index, _ -> NSCollectionLayoutSection? in
-            
-            //item
-            
             
             let posterItem = NSCollectionLayoutItem(layoutSize: NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .absolute(60))
             )
@@ -102,10 +100,9 @@ class ItemDetailViewController: UIViewController, UICollectionViewDelegate, UICo
             
             let timeStampItem = NSCollectionLayoutItem(layoutSize: NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .absolute(20)))
 
-            //group
             let group = NSCollectionLayoutGroup.vertical(layoutSize: NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .absolute(sectionHeight)), subitems: [posterItem, postItem, actionItem, titleItem, captionItem, timeStampItem]
             )
-            //section
+            
             let section = NSCollectionLayoutSection(group: group)
             section.contentInsets = NSDirectionalEdgeInsets(top: 3, leading: 0, bottom: 10, trailing: 0)
             return section
@@ -140,10 +137,9 @@ class ItemDetailViewController: UIViewController, UICollectionViewDelegate, UICo
         
         StorageManager.shared.profilePictureUrl(for: post.posterEmail) { [weak self] profilePictureUrl in
             guard let profilePhotoUrl = profilePictureUrl else {
-                    print("failed to get urls")
                 completion(false)
-                    return
-                }
+                return
+            }
             
             let isSavedData = post.savers.contains(currentEmail)
             print(isSavedData)
@@ -166,7 +162,7 @@ class ItemDetailViewController: UIViewController, UICollectionViewDelegate, UICo
             self?.viewModels.append(postData)
             completion(true)
             
-    }
+        }
     }
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
@@ -299,14 +295,12 @@ class ItemDetailViewController: UIViewController, UICollectionViewDelegate, UICo
 
 extension ItemDetailViewController: GearActionsCollectionViewCellDelegate {
     func GearActionsCollectionViewCellDidTapMessageButton(_ cell: GearActionsCollectionViewCell, post: Post) {
-        print("message tapped")
         guard let email1 = UserDefaults.standard.string(forKey: "email") else {return}
         let selectedItem = self.post
 
         let email2 = selectedItem.posterEmail
         
         if email1 == email2 {
-            print("same person")
             return
         }
 
@@ -333,8 +327,6 @@ extension ItemDetailViewController: GearActionsCollectionViewCellDelegate {
     }
     
     func GearActionsCollectionViewCellDidTapSaveButton(_ cell: GearActionsCollectionViewCell, isSaved: Bool, post: Post) {
-        print("saved tapped")
-        
         spinner.show(in: view)
 
         DatabaseManager.shared.updateItemSaved(state: self.isSaved ? .unSaved : .save, itemId: self.post.postId, completion: {
@@ -345,9 +337,7 @@ extension ItemDetailViewController: GearActionsCollectionViewCellDelegate {
                 self?.completion?(true)
                 NotificationCenter.default.post(name: Notification.Name("didChangePost"), object: nil)
                 self?.spinner.dismiss()
-                print("success")
             } else {
-                print("failed to save")
                 self?.spinner.dismiss()
             }
         })
@@ -364,13 +354,13 @@ extension ItemDetailViewController: PosterCollectionViewCellDelegate {
         guard let currentEmail = UserDefaults.standard.string(forKey: "email") else {return}
         
         if currentEmail == post.posterEmail {
-            let sheet = UIAlertController(title: "post action", message: nil, preferredStyle: .actionSheet)
-            sheet.addAction(UIAlertAction(title: "cancel", style: .cancel))
-            sheet.addAction(UIAlertAction(title: "delete post", style: .default, handler: {
+            let sheet = UIAlertController(title: "Post action", message: nil, preferredStyle: .actionSheet)
+            sheet.addAction(UIAlertAction(title: "Cancel", style: .cancel))
+            sheet.addAction(UIAlertAction(title: "Delete post", style: .default, handler: {
                 [weak self] _ in
                 if type == "item" {
-                    let ac = UIAlertController(title: "are you sure?", message: nil, preferredStyle: .alert)
-                    ac.addAction(UIAlertAction(title: "delete", style: .default, handler: { [weak self] _ in
+                    let ac = UIAlertController(title: "Are you sure?", message: nil, preferredStyle: .alert)
+                    ac.addAction(UIAlertAction(title: "Delete", style: .default, handler: { [weak self] _ in
                         let postId = post.postId
                         DatabaseManager.shared.deleteClipOrNormalPost(postId: postId, completion: {
                             [weak self] success in
@@ -383,7 +373,7 @@ extension ItemDetailViewController: PosterCollectionViewCellDelegate {
                             }
                         })
                     }))
-                    ac.addAction(UIAlertAction(title: "cancel", style: .cancel, handler: nil))
+                    ac.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
                     self?.present(ac, animated: true)
                 }
                 
@@ -391,19 +381,19 @@ extension ItemDetailViewController: PosterCollectionViewCellDelegate {
             present(sheet, animated: true)
             
         } else {
-            let sheet = UIAlertController(title: "post action", message: nil, preferredStyle: .actionSheet)
-            sheet.addAction(UIAlertAction(title: "cancel", style: .cancel))
-            sheet.addAction(UIAlertAction(title: "block user", style: .default, handler: {
+            let sheet = UIAlertController(title: "Post action", message: nil, preferredStyle: .actionSheet)
+            sheet.addAction(UIAlertAction(title: "Cancel", style: .cancel))
+            sheet.addAction(UIAlertAction(title: "Block user", style: .default, handler: {
                 [weak self] _ in
                 guard let currentEmail = UserDefaults.standard.string(forKey: "email") else {return}
                 self?.blockAUser(email: post.posterEmail, currentEmail: currentEmail)
             }))
-            sheet.addAction(UIAlertAction(title: "report post", style: .destructive, handler: {
+            sheet.addAction(UIAlertAction(title: "Report post", style: .destructive, handler: {
                 [weak self] _ in
                 DatabaseManager.shared.reportPost(post: post, completion: {
                     [weak self] success in
-                    let ac = UIAlertController(title: "post reported", message: nil, preferredStyle: .alert)
-                    ac.addAction(UIAlertAction(title: "ok", style: .cancel))
+                    let ac = UIAlertController(title: "Post reported", message: nil, preferredStyle: .alert)
+                    ac.addAction(UIAlertAction(title: "Ok", style: .cancel))
                     DispatchQueue.main.async {
                         self?.present(ac,animated: true)
                     }
@@ -412,11 +402,7 @@ extension ItemDetailViewController: PosterCollectionViewCellDelegate {
             }))
             
             present(sheet, animated: true)
-            
         }
-        
-        
-
     }
     
     func posterCollectionViewCellDidUsername(_ cell: PosterCollectionViewCell, email: String, username: String, region: String) {
@@ -435,7 +421,7 @@ extension ItemDetailViewController: PosterCollectionViewCellDelegate {
 
 extension ItemDetailViewController: titleCollectionViewCellDelegate {
     func titleCollectionViewCellDelegateDidTapTitle(_ cell: titleCollectionViewCell) {
-        print("title tapped")
+        //do nothing
     }
 }
 
@@ -456,16 +442,10 @@ extension ItemDetailViewController: MultiImageViewDelegate {
     
     func MultiImageViewDelegateDidScroll(_ cell: MultiPhotoCollectionViewCell, page: Int, index: Int, type: String) {
         let actionIndex = IndexPath(row: 2, section: 0)
-        print("here")
         guard let actionCell = collectionView?.cellForItem(at: actionIndex) as? GearActionsCollectionViewCell else {
-            print("returned")
             return}
-        print(page)
         actionCell.pageTurner.currentPage = page
-        
     }
-    
-    
 }
 
 

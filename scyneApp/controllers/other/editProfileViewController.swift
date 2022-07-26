@@ -13,34 +13,34 @@ class editProfileViewController: UIViewController {
     
     private let nameLabel: UILabel = {
         let label = UILabel()
-        label.text = "name"
+        label.text = "Name"
         label.font = .systemFont(ofSize: 18, weight: .regular)
         return label
     }()
     
     private let bioLabel: UILabel = {
         let label = UILabel()
-        label.text = "bio"
+        label.text = "Bio"
         label.font = .systemFont(ofSize: 18, weight: .regular)
         return label
     }()
     
     private let linkLabel: UILabel = {
         let label = UILabel()
-        label.text = "link"
+        label.text = "Link"
         label.font = .systemFont(ofSize: 18, weight: .regular)
         return label
     }()
     
     let nameField: ScyneTextField = {
         let field = ScyneTextField()
-        field.placeholder = "name..."
+        field.placeholder = "Name..."
         return field
     }()
     
     let linkField: ScyneTextField = {
         let field = ScyneTextField()
-        field.placeholder = "link..."
+        field.placeholder = "Link..."
         return field
     }()
     
@@ -57,7 +57,7 @@ class editProfileViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        title = "edit profile"
+        title = "EDIT PROFILE"
         view.addSubview(nameField)
         view.addSubview(bioTextView)
         view.addSubview(nameLabel)
@@ -99,7 +99,7 @@ class editProfileViewController: UIViewController {
         
         guard !(bio.count > 300) else {
             DispatchQueue.main.async {
-                let ac = UIAlertController(title: "max 300 characters", message: nil, preferredStyle: .alert)
+                let ac = UIAlertController(title: "Max 300 characters", message: nil, preferredStyle: .alert)
                 ac.addAction(UIAlertAction(title: "ok", style: .cancel))
                 self.present(ac, animated: true)
             }
@@ -115,15 +115,11 @@ class editProfileViewController: UIViewController {
                     self?.didTapClose()
                     self?.completion?()
                 }
-            
+            }
         }
-    }
     }
     
     @objc func didTapClose() {
         dismiss(animated: true, completion: nil)
     }
-    
-        
-        
 }

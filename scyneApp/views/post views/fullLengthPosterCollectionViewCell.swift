@@ -54,7 +54,6 @@ class fullLengthPosterCollectionViewCell: UICollectionViewCell {
     
     
     @objc func didTapLabel() {
-        print("was tapped um")
         guard let email = self.posterEmail else {return}
         guard let username = self.posterUsername else {return}
         guard let reg = self.region else {return}

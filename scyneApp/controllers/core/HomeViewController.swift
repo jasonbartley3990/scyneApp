@@ -41,6 +41,71 @@ class HomeViewController: UIViewController, UICollectionViewDelegate, UICollecti
     
     private var blockUsers: [String] = []
     
+    private let noPostsInRegion: UILabel = {
+        let label = UILabel()
+        label.text = "No Posts In Your Area!"
+        label.textColor = .label
+        label.textAlignment = .center
+        label.font = .systemFont(ofSize: 21, weight: .regular)
+        label.isHidden = true
+        return label
+    }()
+    
+    private let noPostsFromFollowingLabel: UILabel = {
+        let label = UILabel()
+        label.text = "No Posts!"
+        label.textColor = .label
+        label.textAlignment = .center
+        label.font = .systemFont(ofSize: 21, weight: .regular)
+        label.isHidden = true
+        return label
+    }()
+    
+    private let followOtherUsersLabel: UILabel = {
+        let label = UILabel()
+        label.text = "You can still follow users in other regions"
+        label.textColor = .label
+        label.textAlignment = .center
+        label.font = .systemFont(ofSize: 18, weight: .thin)
+        label.isHidden = true
+        return label
+    }()
+    
+    private let notFollowingAnybodyLabel: UILabel = {
+        let label = UILabel()
+        label.text = "Your not following anybody!"
+        label.textColor = .label
+        label.textAlignment = .center
+        label.font = .systemFont(ofSize: 18, weight: .thin)
+        label.isHidden = true
+        return label
+    }()
+    
+    private let inviteFriendsLabel: UILabel = {
+        let label = UILabel()
+        label.text = "Invite your friends to join SCYNE"
+        label.textColor = .label
+        label.textAlignment = .center
+        label.font = .systemFont(ofSize: 18, weight: .thin)
+        label.isHidden = true
+        return label
+    }()
+    
+    
+    private let findUsersButton: UILabel = {
+        let label = UILabel()
+        label.text = "FIND USERS"
+        label.textColor = .white
+        label.textAlignment = .center
+        label.font = .systemFont(ofSize: 17, weight: .regular)
+        label.layer.cornerRadius = 20
+        label.clipsToBounds = true
+        label.backgroundColor = .systemGreen
+        label.isUserInteractionEnabled = true
+        label.isHidden = true
+        return label
+    }()
+    
     
     let ThreeDaysAgo = Calendar.current.date(
       byAdding: .hour,
@@ -74,6 +139,13 @@ class HomeViewController: UIViewController, UICollectionViewDelegate, UICollecti
         super.viewDidLayoutSubviews()
         
         collectionView?.frame = CGRect(x: 0, y: view.safeAreaInsets.top - 5, width: view.width, height: view.height - view.safeAreaInsets.top - view.safeAreaInsets.bottom)
+        noPostsInRegion.frame = CGRect(x: 10, y: (view.height  - 110)/2, width: view.width-20, height: 30)
+        followOtherUsersLabel.frame = CGRect(x: 10, y: noPostsInRegion.bottom + 15, width: view.width - 20, height: 30)
+        notFollowingAnybodyLabel.frame = CGRect(x: 10, y: noPostsInRegion.bottom + 15, width: view.width - 20, height: 30)
+        inviteFriendsLabel.frame = CGRect(x: 10, y: noPostsInRegion.bottom + 15, width: view.width - 20, height: 30)
+        findUsersButton.frame = CGRect(x: (view.width - 120)/2 , y: followOtherUsersLabel.bottom + 10, width: 120, height: 40)
+        
+        
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -107,6 +179,9 @@ class HomeViewController: UIViewController, UICollectionViewDelegate, UICollecti
         title = "SCYNE"
         view.backgroundColor = .systemBackground
         
+        let findUserTap = UITapGestureRecognizer(target: self, action: #selector(didTapSearch))
+        findUsersButton.addGestureRecognizer(findUserTap)
+        
         let camera = UIBarButtonItem(barButtonSystemItem: .camera, target: self, action: #selector(didTapAdd))
         let spacer = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
         let search = UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector(didTapSearch))
@@ -125,222 +200,153 @@ class HomeViewController: UIViewController, UICollectionViewDelegate, UICollecti
     
     private func fetchLocalPosts() {
         
-        guard let currentEmail = UserDefaults.standard.string(forKey: "email") else {return}
+        spinner.show(in: view)
+        
+        guard let currentEmail = UserDefaults.standard.string(forKey: "email") else {
+            spinner.dismiss()
+            return
+        }
         DatabaseManager.shared.getBlockUsers(email: currentEmail , completion: {
             [weak self] users in
             self?.blockUsers = users
             infoManager.shared.blockUsers = users
         
-        self?.viewModels = []
-        self?.localViewModels = []
+            self?.viewModels = []
+            self?.localViewModels = []
 
-        guard let region = UserDefaults.standard.string(forKey: "region") else {return}
-        DatabaseManager.shared.getAllPostsForRegion(region: region, completion: {
-            [weak self] posts, lastDoc in
-            
-            guard !posts.isEmpty else {
-                print("whoops")
+            guard let region = UserDefaults.standard.string(forKey: "region") else {
+                self?.spinner.dismiss()
                 return
             }
-            let group = DispatchGroup()
             
-            guard let last = lastDoc else {return}
-            
-            self?.lastDocumentForLocal = last
-            
-            for _ in 1...posts.count {
-                group.enter()
-            }
-            
-            for post in posts {
-                let postType = post.postType
+            DatabaseManager.shared.getAllPostsForRegion(region: region, completion: {
+                [weak self] posts, lastDoc in
                 
-                guard let isBlocked = self?.blockUsers.contains(post.posterEmail) else {
-                    print("failed in isBlocked")
-                    group.leave()
-                    return}
-                if isBlocked {
-                    print("isBlocked")
-                    group.leave()
-                    continue
-                } else {
-                    print("not blocked")
+                guard !posts.isEmpty else {
+                    self?.spinner.dismiss()
+                    self?.showNoPostsInRegion()
+                    return
                 }
                 
+                let group = DispatchGroup()
                 
-                if postType == "clip" {
-                    StorageManager.shared.profilePictureUrl(for: post.posterEmail) { [weak self] profilePictureUrl in
-                        
-                        guard let profilePic = profilePictureUrl else {
-                            group.leave()
-                            print("failer with profile photo")
-                            return}
-                        
-                        guard let email = UserDefaults.standard.string(forKey: "email") else {
-                            group.leave()
-                            return}
-                        
-                        guard let firstUrl = post.photoUrls.first else {
-                            group.leave()
-                            return}
-                        
-                        guard let videoUrl = URL(string: firstUrl) else {
-                            group.leave()
-                            return}
+                guard let last = lastDoc else {
+                    self?.spinner.dismiss()
+                    return
+                }
+                
+                self?.lastDocumentForLocal = last
+                
+                for _ in 1...posts.count {
+                    group.enter()
+                }
+                
+                for post in posts {
+                    let postType = post.postType
                     
-                        
-                        DatabaseManager.shared.getTotalViews(for: post, completion: {
-                            [weak self] views in
-                            
-                            DatabaseManager.shared.getTotalLikers(for: post, completion: {
-                                [weak self] likers in
-                                
-                                let isClipLiked = likers.contains(email)
-                                
-                                let clipData: [HomeFeedCellType] = [
-                                    .poster(viewModel: PosterCollectionViewCellviewModel(email: post.posterEmail, username: post.posterUsername, region: post.region, post: post, postType: "clip", profilePicture: profilePic)
-                                    ),
-                                    .singleVideo(viewModel: SingleVideoCollectionViewCellViewModel(url: videoUrl, post: post, viewers: views, type: "clip")
-                                          ),
-                                    .postActions(viewModel: PostActionsCollectionViewCellViewModel(isLiked: isClipLiked, likeCount: likers.count, viewCount: views, post: post, likers: likers)),
-                                    .title(viewModel: TitleCollectionViewCellViewModel(title: post.posterUsername)),
-                                    .caption(viewModel: PostCaptionCollectionViewCellModel(caption: post.caption)),
-                                    .timeStamp(viewModel: PostDateTimeCollectionViewCellViewModel(date: post.postedDateNum, dateString: post.postedDateString))
-                                    ]
-                                    self?.viewModels.append(clipData)
-                                    self?.localViewModels.append(clipData)
-                                
-                                let randomNumber = Int.random(in: 0...11)
-                                
-                                if randomNumber == 7 {
-                                    if self?.AllAds.count != 0 {
-                                        guard let ad = self?.AllAds.randomElement() else {
-                                            group.leave()
-                                            return}
-                                        self?.viewModels.append(ad)
-                                        self?.localViewModels.append(ad)
-                                    }
-                                }
-                                group.leave()
-                            })
-                        })
+                    guard let isBlocked = self?.blockUsers.contains(post.posterEmail) else {
+                        group.leave()
+                        return
                     }
-                }
-                
-                if postType == "gear" {
-                    StorageManager.shared.profilePictureUrl(for: post.posterEmail) { [weak self] profilePictureUrl in
-                        
-                        guard let profilePic = profilePictureUrl else {
-                            group.leave()
-                            return}
-                        
-                        guard let email = UserDefaults.standard.string(forKey: "email") else {
-                            group.leave()
-                            return}
-                        
-                        let isPostSaved = post.savers.contains(email)
-                        
-                        guard let askingPrice = post.askingPrice else {
-                            group.leave()
-                            return}
+                    if isBlocked {
+                        group.leave()
+                        continue
+                    }
                     
-                    let gearData: [HomeFeedCellType] = [
-                        .poster(viewModel: PosterCollectionViewCellviewModel(email: post.posterEmail, username: post.posterUsername, region: post.region, post: post, postType: "gear", profilePicture: profilePic)
-                        ),
-                        .MultiPhoto(viewModel: MultiPhotoCollectionViewCelViewModel(urls: post.photoUrls, post: post, type: "gear")
-                              ),
-                        .gearAction(viewModel: gearActionsCollectionViewCellViewModel(photoCount: post.urlCount, isSaved: isPostSaved, post: post)),
-                        .title(viewModel: TitleCollectionViewCellViewModel(title: "\(askingPrice)$")),
-                        .caption(viewModel: PostCaptionCollectionViewCellModel(caption: post.caption)),
-                        .timeStamp(viewModel: PostDateTimeCollectionViewCellViewModel(date: post.postedDateNum, dateString: post.postedDateString))
-                        ]
-                        self?.viewModels.append(gearData)
-                        self?.localViewModels.append(gearData)
-                        
-                        let randomNumber = Int.random(in: 0...11)
-                        
-                        if randomNumber == 7 {
-                            if self?.AllAds.count != 0 {
-                                guard let ad = self?.AllAds.randomElement() else {
-                                    group.leave()
-                                    return}
-                                self?.viewModels.append(ad)
-                                self?.localViewModels.append(ad)
+                    if postType == "clip" {
+                        StorageManager.shared.profilePictureUrl(for: post.posterEmail) { [weak self] profilePictureUrl in
+                            
+                            guard let profilePic = profilePictureUrl else {
+                                group.leave()
+                                return
                             }
-                        }
-                        group.leave()
-                    }
-                }
-                
-                if postType == "spot" {
-                    guard let email = UserDefaults.standard.string(forKey: "email") else {
-                        group.leave()
-                        return}
-                    
-                    let isSpotSaved = post.savers.contains(email)
-                    
-                    guard let addy = post.address else {
-                        group.leave()
-                        return}
-                    
-                    guard let spotName = post.nickname else {
-                        group.leave()
-                        return}
-                    
-                    let spotData: [HomeFeedCellType] = [
-                        .newSpot(viewModel: SpotHeaderCollectionViewCellModel(isSaved: isSpotSaved, post: post)),
-                        .MultiPhoto(viewModel: MultiPhotoCollectionViewCelViewModel(urls: post.photoUrls, post: post, type: "spot")
-                        ),
-                        .spotAction(viewModel: SpotActionsCollectionViewCellViewModel(photoCount: post.urlCount, isSaved: isSpotSaved, post: post)),
-                        .title(viewModel: TitleCollectionViewCellViewModel(title: spotName)),
-                        .address(viewModel: SpotAddressCollectionViewCellViewModel(address: addy)),
-                        .uploader(viewModel: SpotUploaderCollectionViewCellViewModel(uploader: post.posterUsername, email: post.posterEmail, region: post.region))
-                    ]
-                    self?.viewModels.append(spotData)
-                    self?.localViewModels.append(spotData)
-                    
-                    let randomNumber = Int.random(in: 0...11)
-                    
-                    if randomNumber == 7 {
-                        if self?.AllAds.count != 0 {
-                            guard let ad = self?.AllAds.randomElement() else {
-                                group.leave()
-                                return}
-                            self?.viewModels.append(ad)
-                            self?.localViewModels.append(ad)
-                        }
-                        
-                    }
-                    group.leave()
-                }
-            
-            
-                if postType == "normal" {
-                    StorageManager.shared.profilePictureUrl(for: post.posterEmail) { [weak self] profilePictureUrl in
-                        
-                        guard let profilePic = profilePictureUrl else {
-                            group.leave()
-                            return}
-                        
-                        guard let email = UserDefaults.standard.string(forKey: "email") else {
-                            group.leave()
-                            return}
-                        
-                        DatabaseManager.shared.getTotalLikers(for: post, completion: {
-                            [weak self] likers in
                             
-                            let isPostLiked = likers.contains(email)
+                            guard let email = UserDefaults.standard.string(forKey: "email") else {
+                                group.leave()
+                                return
+                            }
+                            
+                            guard let firstUrl = post.photoUrls.first else {
+                                group.leave()
+                                return
+                            }
+                            
+                            guard let videoUrl = URL(string: firstUrl) else {
+                                group.leave()
+                                return
+                            }
+                        
+                            
+                            DatabaseManager.shared.getTotalViews(for: post, completion: {
+                                [weak self] views in
+                                
+                                DatabaseManager.shared.getTotalLikers(for: post, completion: {
+                                    [weak self] likers in
+                                    
+                                    let isClipLiked = likers.contains(email)
+                                    
+                                    let clipData: [HomeFeedCellType] = [
+                                        .poster(viewModel: PosterCollectionViewCellviewModel(email: post.posterEmail, username: post.posterUsername, region: post.region, post: post, postType: "clip", profilePicture: profilePic)
+                                        ),
+                                        .singleVideo(viewModel: SingleVideoCollectionViewCellViewModel(url: videoUrl, post: post, viewers: views, type: "clip")
+                                              ),
+                                        .postActions(viewModel: PostActionsCollectionViewCellViewModel(isLiked: isClipLiked, likeCount: likers.count, viewCount: views, post: post, likers: likers)),
+                                        .title(viewModel: TitleCollectionViewCellViewModel(title: post.posterUsername)),
+                                        .caption(viewModel: PostCaptionCollectionViewCellModel(caption: post.caption)),
+                                        .timeStamp(viewModel: PostDateTimeCollectionViewCellViewModel(date: post.postedDateNum, dateString: post.postedDateString))
+                                        ]
+                                        self?.viewModels.append(clipData)
+                                        self?.localViewModels.append(clipData)
+                                    
+                                    let randomNumber = Int.random(in: 0...11)
+                                    
+                                    if randomNumber == 7 {
+                                        if self?.AllAds.count != 0 {
+                                            guard let ad = self?.AllAds.randomElement() else {
+                                                group.leave()
+                                                return}
+                                            self?.viewModels.append(ad)
+                                            self?.localViewModels.append(ad)
+                                        }
+                                    }
+                                    group.leave()
+                                })
+                            })
+                        }
+                    }
                     
-                            let postData: [HomeFeedCellType] = [
-                                .poster(viewModel: PosterCollectionViewCellviewModel(email: post.posterEmail, username: post.posterUsername, region: post.region, post: post, postType: "post", profilePicture: profilePic)),
-                                .MultiPhoto(viewModel: MultiPhotoCollectionViewCelViewModel(urls: post.photoUrls, post: post, type: "post")),
-                                .normalPostAction(viewModel: normalPostActionsCollectionViewCellViewModel(isLiked: isPostLiked, likeCount: likers.count, post: post, likers: likers, numberOfPhotos: post.urlCount)),
-                                .title(viewModel: TitleCollectionViewCellViewModel(title: post.posterUsername)),
-                                .caption(viewModel: PostCaptionCollectionViewCellModel(caption: post.caption)),
-                                .timeStamp(viewModel: PostDateTimeCollectionViewCellViewModel(date: post.postedDateNum, dateString: post.postedDateString))
+                    if postType == "gear" {
+                        StorageManager.shared.profilePictureUrl(for: post.posterEmail) { [weak self] profilePictureUrl in
+                            
+                            guard let profilePic = profilePictureUrl else {
+                                group.leave()
+                                return
+                            }
+                            
+                            guard let email = UserDefaults.standard.string(forKey: "email") else {
+                                group.leave()
+                                return
+                            }
+                            
+                            let isPostSaved = post.savers.contains(email)
+                            
+                            guard let askingPrice = post.askingPrice else {
+                                group.leave()
+                                return
+                            }
+                        
+                        let gearData: [HomeFeedCellType] = [
+                            .poster(viewModel: PosterCollectionViewCellviewModel(email: post.posterEmail, username: post.posterUsername, region: post.region, post: post, postType: "gear", profilePicture: profilePic)
+                            ),
+                            .MultiPhoto(viewModel: MultiPhotoCollectionViewCelViewModel(urls: post.photoUrls, post: post, type: "gear")
+                                  ),
+                            .gearAction(viewModel: gearActionsCollectionViewCellViewModel(photoCount: post.urlCount, isSaved: isPostSaved, post: post)),
+                            .title(viewModel: TitleCollectionViewCellViewModel(title: "\(askingPrice)$")),
+                            .caption(viewModel: PostCaptionCollectionViewCellModel(caption: post.caption)),
+                            .timeStamp(viewModel: PostDateTimeCollectionViewCellViewModel(date: post.postedDateNum, dateString: post.postedDateString))
                             ]
-                            self?.viewModels.append(postData)
-                            self?.localViewModels.append(postData)
+                            self?.viewModels.append(gearData)
+                            self?.localViewModels.append(gearData)
                             
                             let randomNumber = Int.random(in: 0...11)
                             
@@ -352,21 +358,118 @@ class HomeViewController: UIViewController, UICollectionViewDelegate, UICollecti
                                     self?.viewModels.append(ad)
                                     self?.localViewModels.append(ad)
                                 }
-                                
+                            }
+                            group.leave()
+                        }
+                    }
+                    
+                    if postType == "spot" {
+                        guard let email = UserDefaults.standard.string(forKey: "email") else {
+                            group.leave()
+                            return
+                        }
+                        
+                        let isSpotSaved = post.savers.contains(email)
+                        
+                        guard let addy = post.address else {
+                            group.leave()
+                            return
+                        }
+                        
+                        guard let spotName = post.nickname else {
+                            group.leave()
+                            return
+                        }
+                        
+                        let spotData: [HomeFeedCellType] = [
+                            .newSpot(viewModel: SpotHeaderCollectionViewCellModel(isSaved: isSpotSaved, post: post)),
+                            .MultiPhoto(viewModel: MultiPhotoCollectionViewCelViewModel(urls: post.photoUrls, post: post, type: "spot")
+                            ),
+                            .spotAction(viewModel: SpotActionsCollectionViewCellViewModel(photoCount: post.urlCount, isSaved: isSpotSaved, post: post)),
+                            .title(viewModel: TitleCollectionViewCellViewModel(title: spotName)),
+                            .address(viewModel: SpotAddressCollectionViewCellViewModel(address: addy)),
+                            .uploader(viewModel: SpotUploaderCollectionViewCellViewModel(uploader: post.posterUsername, email: post.posterEmail, region: post.region))
+                        ]
+                        self?.viewModels.append(spotData)
+                        self?.localViewModels.append(spotData)
+                        
+                        let randomNumber = Int.random(in: 0...11)
+                        
+                        if randomNumber == 7 {
+                            if self?.AllAds.count != 0 {
+                                guard let ad = self?.AllAds.randomElement() else {
+                                    group.leave()
+                                    return}
+                                self?.viewModels.append(ad)
+                                self?.localViewModels.append(ad)
                             }
                             
-                            group.leave()
-                        })
+                        }
+                        group.leave()
+                    }
+                
+                
+                    if postType == "normal" {
+                        StorageManager.shared.profilePictureUrl(for: post.posterEmail) { [weak self] profilePictureUrl in
+                            
+                            guard let profilePic = profilePictureUrl else {
+                                group.leave()
+                                return
+                            }
+                            
+                            guard let email = UserDefaults.standard.string(forKey: "email") else {
+                                group.leave()
+                                return
+                            }
+                            
+                            DatabaseManager.shared.getTotalLikers(for: post, completion: {
+                                [weak self] likers in
+                                
+                                let isPostLiked = likers.contains(email)
+                        
+                                let postData: [HomeFeedCellType] = [
+                                    .poster(viewModel: PosterCollectionViewCellviewModel(email: post.posterEmail, username: post.posterUsername, region: post.region, post: post, postType: "post", profilePicture: profilePic)),
+                                    .MultiPhoto(viewModel: MultiPhotoCollectionViewCelViewModel(urls: post.photoUrls, post: post, type: "post")),
+                                    .normalPostAction(viewModel: normalPostActionsCollectionViewCellViewModel(isLiked: isPostLiked, likeCount: likers.count, post: post, likers: likers, numberOfPhotos: post.urlCount)),
+                                    .title(viewModel: TitleCollectionViewCellViewModel(title: post.posterUsername)),
+                                    .caption(viewModel: PostCaptionCollectionViewCellModel(caption: post.caption)),
+                                    .timeStamp(viewModel: PostDateTimeCollectionViewCellViewModel(date: post.postedDateNum, dateString: post.postedDateString))
+                                ]
+                                self?.viewModels.append(postData)
+                                self?.localViewModels.append(postData)
+                                
+                                let randomNumber = Int.random(in: 0...11)
+                                
+                                if randomNumber == 7 {
+                                    if self?.AllAds.count != 0 {
+                                        guard let ad = self?.AllAds.randomElement() else {
+                                            group.leave()
+                                            return}
+                                        self?.viewModels.append(ad)
+                                        self?.localViewModels.append(ad)
+                                    }
+                                    
+                                }
+                                group.leave()
+                            })
+                        }
                     }
                 }
-            }
-           
-            group.notify(queue: .main, execute: {
-                self?.collectionView?.reloadData()
+               
+                group.notify(queue: .main, execute: {
+                    self?.spinner.dismiss()
+                    guard let vc = self else {return}
+                    if vc.viewModels.isEmpty {
+                        self?.showNoPostsInRegion()
+                    } else {
+                        self?.showCollectionView()
+                        self?.collectionView?.reloadData()
+                    }
+                })
+            })
             })
             
-        })
-        })
+        
         
     }
     
@@ -550,8 +653,11 @@ class HomeViewController: UIViewController, UICollectionViewDelegate, UICollecti
             guard let allLocal = self?.localViewModels else {return}
             
             self?.viewModels = allLocal
-            DispatchQueue.main.async {
-                self?.collectionView?.reloadData()
+            
+            if allLocal.isEmpty {
+                self?.showNoPostsInRegion()
+            } else {
+                self?.showCollectionView()
             }
             
         }))
@@ -561,7 +667,6 @@ class HomeViewController: UIViewController, UICollectionViewDelegate, UICollecti
             self?.currentFeedSpotlight = false
             
             guard let queryDate = self?.ThreeDaysAgo?.timeIntervalSince1970 else {
-                print("did returned")
                 return}
             self?.getFollowingPosts(date: queryDate)
             
@@ -624,7 +729,7 @@ class HomeViewController: UIViewController, UICollectionViewDelegate, UICollecti
             
             guard !users.isEmpty else {
                 self?.spinner.dismiss()
-                print("returned")
+                self?.showNotFollowingAnybody()
                 return
             }
             
@@ -659,7 +764,6 @@ class HomeViewController: UIViewController, UICollectionViewDelegate, UICollecti
                                     
                                     guard let profilePic = profilePictureUrl else {
                                         group.leave()
-                                        print("failer with profile photo")
                                         return}
                                     
                                     guard let email = UserDefaults.standard.string(forKey: "email") else {
@@ -715,12 +819,16 @@ class HomeViewController: UIViewController, UICollectionViewDelegate, UICollecti
                                     
                                     guard let profilePic = profilePictureUrl else {
                                         group.leave()
-                                        print("failer with profile photo")
-                                        return}
+                                        self?.spinner.dismiss()
+                                        return
+                                    }
                                     
                                     guard let email = UserDefaults.standard.string(forKey: "email") else {
+                                        self?.spinner.dismiss()
                                         group.leave()
-                                        return}
+                                        return
+                                        
+                                    }
                                         
                                         DatabaseManager.shared.getTotalLikers(for: post) {
                                             [weak self] likers in
@@ -757,10 +865,15 @@ class HomeViewController: UIViewController, UICollectionViewDelegate, UICollecti
                                 }
                         }
                         group.notify(queue: .main, execute: {
+                            self?.spinner.dismiss()
                             self?.followingViewModel = newViewModels
                             self?.viewModels = newViewModels
-                            self?.spinner.dismiss()
-                            self?.collectionView?.reloadData()
+                            if newViewModels.isEmpty {
+                                self?.noFollowingPosts()
+                            } else {
+                                self?.showCollectionView()
+                                self?.collectionView?.reloadData()
+                            }
                         })
                     })
             })
@@ -771,6 +884,7 @@ class HomeViewController: UIViewController, UICollectionViewDelegate, UICollecti
             spinner.dismiss()
             self.viewModels = self.followingViewModel
             DispatchQueue.main.async {
+                self.showCollectionView()
                 self.collectionView?.reloadData()
             }
         }
@@ -789,10 +903,11 @@ class HomeViewController: UIViewController, UICollectionViewDelegate, UICollecti
             guard let last = lastDocu else {
                 self?.viewModels = []
                 DispatchQueue.main.async {
-                    self?.collectionView?.reloadData()
+                    self?.showNoTopPosts()
                     self?.spinner.dismiss()
                 }
-                return}
+                return
+            }
             self?.lastDocumentRegion = last
             
             let group = DispatchGroup()
@@ -803,7 +918,7 @@ class HomeViewController: UIViewController, UICollectionViewDelegate, UICollecti
                 self?.viewModels = []
                 DispatchQueue.main.async {
                     self?.spinner.dismiss()
-                    self?.collectionView?.reloadData()
+                    self?.showNoTopPosts()
                 }
             }
             
@@ -825,7 +940,6 @@ class HomeViewController: UIViewController, UICollectionViewDelegate, UICollecti
                         
                         guard let profilePic = profilePictureUrl else {
                             group.leave()
-                            print("failer with profile photo")
                             return}
                         
                         guard let email = UserDefaults.standard.string(forKey: "email") else {
@@ -878,15 +992,77 @@ class HomeViewController: UIViewController, UICollectionViewDelegate, UICollecti
             
             }
             group.notify(queue: .main, execute: {
-                print("are you here")
                 
                 self?.regionViewModels = newViewModels
                 self?.spinner.dismiss()
                 self?.viewModels = newViewModels
+                self?.showCollectionView()
                 self?.collectionView?.reloadData()
                
             })
         })
+    }
+    
+    private func showNoPostsInRegion() {
+        DispatchQueue.main.async { [weak self] in
+            self?.notFollowingAnybodyLabel.isHidden = true
+            self?.findUsersButton.isHidden = false
+            self?.inviteFriendsLabel.isHidden = true
+            self?.noPostsInRegion.isHidden = false
+            self?.followOtherUsersLabel.isHidden = false
+            self?.collectionView?.isHidden = true
+            self?.noPostsFromFollowingLabel.isHidden = true
+        }
+    }
+    
+    private func showNotFollowingAnybody() {
+        DispatchQueue.main.async { [weak self] in
+            self?.notFollowingAnybodyLabel.isHidden = false
+            self?.findUsersButton.isHidden = false
+            self?.inviteFriendsLabel.isHidden = true
+            self?.noPostsInRegion.isHidden = true
+            self?.followOtherUsersLabel.isHidden = true
+            self?.collectionView?.isHidden = true
+            self?.noPostsFromFollowingLabel.isHidden = true
+        }
+    }
+    
+    private func showNoTopPosts() {
+        DispatchQueue.main.async { [weak self] in
+            self?.notFollowingAnybodyLabel.isHidden = true
+            self?.findUsersButton.isHidden = true
+            self?.inviteFriendsLabel.isHidden = false
+            self?.noPostsInRegion.isHidden = false
+            self?.followOtherUsersLabel.isHidden = true
+            self?.collectionView?.isHidden = true
+            self?.noPostsFromFollowingLabel.isHidden = true
+        }
+    }
+    
+    private func noFollowingPosts() {
+        DispatchQueue.main.async { [weak self] in
+            self?.notFollowingAnybodyLabel.isHidden = true
+            self?.findUsersButton.isHidden = true
+            self?.inviteFriendsLabel.isHidden = true
+            self?.noPostsInRegion.isHidden = true
+            self?.followOtherUsersLabel.isHidden = true
+            self?.collectionView?.isHidden = true
+            self?.noPostsFromFollowingLabel.isHidden = false
+        }
+        
+    }
+    
+    private func showCollectionView() {
+        DispatchQueue.main.async { [weak self] in
+            self?.notFollowingAnybodyLabel.isHidden = true
+            self?.findUsersButton.isHidden = true
+            self?.inviteFriendsLabel.isHidden = true
+            self?.noPostsInRegion.isHidden = true
+            self?.followOtherUsersLabel.isHidden = true
+            self?.collectionView?.isHidden = false
+            self?.noPostsFromFollowingLabel.isHidden = true
+        }
+        
     }
     
     
@@ -950,6 +1126,11 @@ class HomeViewController: UIViewController, UICollectionViewDelegate, UICollecti
             return section
         }))
         view.addSubview(collectionView)
+        view.addSubview(noPostsInRegion)
+        view.addSubview(followOtherUsersLabel)
+        view.addSubview(findUsersButton)
+        view.addSubview(inviteFriendsLabel)
+        view.addSubview(notFollowingAnybodyLabel)
         collectionView.backgroundColor = .systemBackground
         collectionView.delegate = self
         collectionView.dataSource = self
@@ -1113,7 +1294,6 @@ class HomeViewController: UIViewController, UICollectionViewDelegate, UICollecti
         
         if cell.reuseIdentifier == SingleVideoCollectionViewCell.identifier {
             guard let cell = cell as? SingleVideoCollectionViewCell else {return}
-            print("video paused bitch")
             cell.pauseVideo()
             cell.stopTimer()
         }
@@ -1126,7 +1306,6 @@ class HomeViewController: UIViewController, UICollectionViewDelegate, UICollecti
         
         if cell.reuseIdentifier == SingleVideoCollectionViewCell.identifier {
             guard let cell = cell as? SingleVideoCollectionViewCell else {return}
-            print("video will play")
             
             //plays video if it came into view, and pauses the video leaving the view, and post ahead of it
             
@@ -1203,8 +1382,6 @@ class HomeViewController: UIViewController, UICollectionViewDelegate, UICollecti
                 cell.likesLabel.text = "\(cell.likeCount) likes"
                 
             }
-            
-            
         }
         
         if cell.reuseIdentifier == SpotActionsCollectionViewCell.identifier {
@@ -1212,7 +1389,6 @@ class HomeViewController: UIViewController, UICollectionViewDelegate, UICollecti
             cell.index = indexPath.section
             
             //checks if the post has been saved by user
-           
             
             guard let saved = cell.isSaved else {return}
             if saved {
@@ -1714,7 +1890,6 @@ extension HomeViewController: SpotActionsCollectionViewCellDelegate {
         
         //updates save on a post
         
-        print("tapped saved")
         spinner.show(in: view)
         DatabaseManager.shared.updateSpotSaved(state: isSaved ? .save : .unSaved, postId: post.postId, completion: {
             [weak self] success in
@@ -1725,7 +1900,10 @@ extension HomeViewController: SpotActionsCollectionViewCellDelegate {
                         cell.saveLabel.textColor = .systemGreen
                     }
                     cell.isSaved = true
-                    guard let index = cell.index else {return}
+                    guard let index = cell.index else {
+                        self?.spinner.dismiss()
+                        return
+                    }
                     self?.viewModels[index][2] = HomeFeedCellType.spotAction(viewModel: SpotActionsCollectionViewCellViewModel(photoCount: post.urlCount, isSaved: isSaved, post: post))
                     self?.spinner.dismiss()
                 } else {
@@ -1734,13 +1912,13 @@ extension HomeViewController: SpotActionsCollectionViewCellDelegate {
                         cell.saveLabel.textColor = .label
                     }
                     cell.isSaved = false
-                    guard let index = cell.index else {return}
+                    guard let index = cell.index else {
+                        self?.spinner.dismiss()
+                        return}
                     self?.viewModels[index][2] = HomeFeedCellType.spotAction(viewModel: SpotActionsCollectionViewCellViewModel(photoCount: post.urlCount, isSaved: isSaved, post: post))
                     self?.spinner.dismiss()
                 }
-                print("saved")
             } else {
-                print("not saved")
                 self?.spinner.dismiss()
             }
             
@@ -1749,10 +1927,7 @@ extension HomeViewController: SpotActionsCollectionViewCellDelegate {
     }
     
     func spotActionsCollectionViewCellDidTapComment(_ cell: SpotActionsCollectionViewCell, post: Post) {
-        
         //shows comment view controller with all the comments
-        
-        print("tapped comment")
         let vc = commentViewController(post: post)
         navigationController?.pushViewController(vc, animated: true)
     }
@@ -1765,7 +1940,6 @@ extension HomeViewController: SpotHeaderCollectionViewDelegate {
     //lets a user report a post or block a user
     
     func SpotHeaderCollectionViewDelegateDidTapMore(_ cell: SpotHeaderCollectionViewCell, post: Post) {
-        print("tapped more")
         let sheet = UIAlertController(title: "post action", message: nil, preferredStyle: .actionSheet)
         sheet.addAction(UIAlertAction(title: "cancel", style: .cancel))
         sheet.addAction(UIAlertAction(title: "report post", style: .destructive, handler: {
@@ -1788,9 +1962,7 @@ extension HomeViewController: SpotHeaderCollectionViewDelegate {
 
 extension HomeViewController: SpotUploaderCollectionViewCellDelegate {
     func SpotUploaderCollectionViewCellDelegateDidTapPoster(_ cell: SpotUploaderCollectionViewCell, username: String, email: String, region: String) {
-        
         //goes to the posters profile
-        
         let vc = ProfileViewController(user: User(username: username, email: email, region: region))
         navigationController?.pushViewController(vc, animated: true)
     }
@@ -1803,10 +1975,7 @@ extension HomeViewController: SpotUploaderCollectionViewCellDelegate {
     
 extension HomeViewController: GearActionsCollectionViewCellDelegate {
     func GearActionsCollectionViewCellDidTapSaveButton(_ cell: GearActionsCollectionViewCell, isSaved: Bool, post: Post) {
-        
         //update save on a post
-        
-        print("tapped saved")
         spinner.show(in: view)
         DatabaseManager.shared.updateItemSaved(state: isSaved ? .save : .unSaved, itemId: post.postId, completion: {
             [weak self] success in
@@ -1835,12 +2004,10 @@ extension HomeViewController: GearActionsCollectionViewCellDelegate {
                     self?.viewModels[index][2] = HomeFeedCellType.gearAction(viewModel: gearActionsCollectionViewCellViewModel(photoCount: post.urlCount, isSaved: false, post: post))
                     self?.spinner.dismiss()
                 }
-                print("saved")
             } else {
                 DispatchQueue.main.async {
                     self?.spinner.dismiss()
                 }
-                print("not saved")
             }
         })
         
@@ -1849,13 +2016,10 @@ extension HomeViewController: GearActionsCollectionViewCellDelegate {
     func GearActionsCollectionViewCellDidTapMessageButton(_ cell: GearActionsCollectionViewCell, post: Post) {
         
         //checks if the user has had a conversation with the poster before and then shows a chat view controller
-        
-        print("message tapped")
         guard let email1 = UserDefaults.standard.string(forKey: "email") else {return}
         let email2 = post.posterEmail
         
         if email1 == email2 {
-            print("same person")
             return
         }
 
@@ -1892,10 +2056,7 @@ extension HomeViewController: PostCaptionCollectionViewCellDelegate {
 extension HomeViewController: PostActionCollectionViewCellDelegate {
     
     func postActionsCollectionViewCellDidTapPin(_ cell: PostActionCollectionViewCell, post: Post) {
-        
         //goes to location of post
-        
-        print("tapped")
         guard let spotId = post.spotId else {
             return
         }
@@ -1964,18 +2125,10 @@ extension HomeViewController: PostActionCollectionViewCellDelegate {
             
             self.viewModels[index][2] = HomeFeedCellType.postActions(viewModel: PostActionsCollectionViewCellViewModel(isLiked: true, likeCount: count, viewCount: views, post: post, likers: likers))
         }
-        
-        
-        
-        
-        
-        
     }
     
     func postActionsCollectionViewCellDidTapComment(_ cell: PostActionCollectionViewCell, post: Post) {
-        
         //goes to comment view controller for post
-        
         let vc = commentViewController(post: post)
         navigationController?.pushViewController(vc, animated: true)
     }
@@ -1991,8 +2144,6 @@ extension HomeViewController: PostActionCollectionViewCellDelegate {
 
 extension HomeViewController: PosterCollectionViewCellDelegate {
     func posterCollectionViewCellDidTapMore(_ cell: PosterCollectionViewCell, post: Post, type: String, index: Int) {
-        print("tapped more")
-        
         //if is current user ask them if they want to delete a post, if not current user ask them if they want to block or report a post
         
         guard let currentEmail = UserDefaults.standard.string(forKey: "email") else {return}
@@ -2042,17 +2193,12 @@ extension HomeViewController: PosterCollectionViewCellDelegate {
                     }
                 })
             }))
-            
             present(sheet, animated: true)
         }
-        
-        
     }
     
     func posterCollectionViewCellDidUsername(_ cell: PosterCollectionViewCell, email: String, username: String, region: String) {
-        
         //goes to poster profile
-        
         let vc = ProfileViewController(user: User(username: username, email: email, region: region))
         navigationController?.pushViewController(vc, animated: true)
     }
@@ -2064,8 +2210,6 @@ extension HomeViewController: titleCollectionViewCellDelegate {
     func titleCollectionViewCellDelegateDidTapTitle(_ cell: titleCollectionViewCell) {
         //does nothing
     }
-    
-
 }
 
 //MARK: multi image view delegate
@@ -2107,14 +2251,8 @@ extension HomeViewController: MultiImageViewDelegate {
                 //update view model at the index
                 
                 self.viewModels[index][2] = HomeFeedCellType.normalPostAction(viewModel: normalPostActionsCollectionViewCellViewModel(isLiked: true, likeCount: count, post: post, likers: likers, numberOfPhotos: post.urlCount))
-                
             }
-        
-        
         }
-        
-        
-        
     }
     
     func MultiImageViewDelegateDidScroll(_ cell: MultiPhotoCollectionViewCell, page: Int, index: Int, type: String) {
@@ -2151,9 +2289,6 @@ extension HomeViewController: MultiImageViewDelegate {
         }
         
     }
-    
-    
-    
     
 }
 
@@ -2197,23 +2332,16 @@ extension HomeViewController: normalPostActionCollectionViewCellDelegate {
     }
     
     func normalPostActionsCollectionViewCellDidTapComment(_ cell: NormalPostActionsCollectionViewCell, post: Post) {
-        
         //go to comments for the post
-        
         let vc = commentViewController(post: post)
         navigationController?.pushViewController(vc, animated: true)
     }
     
     func postActionsCollectionViewCellDidTapLikers(_ cell: NormalPostActionsCollectionViewCell, likers: [String], likeCount: Int) {
-        
         //goes to liker view controller
-        
         let vc = likerTableViewController(likers: likers, likeCount: likeCount)
         navigationController?.pushViewController(vc, animated: true)
-        
     }
-    
-    
 }
 
 //MARK: advertisements extensions
@@ -2230,7 +2358,6 @@ extension HomeViewController: AdvertisementWebLinkCollectionViewCellDelegate {
                present(vc, animated: true)
             }
         } else {
-            print("cant opemn url")
             let ac = UIAlertController(title: "invalid url", message: nil, preferredStyle: .alert)
             ac.addAction(UIAlertAction(title: "ok", style: .cancel, handler: nil))
             present(ac, animated: true)
@@ -2257,8 +2384,6 @@ extension HomeViewController: AdvertisementHeaderDelegate {
         ac.addAction(UIAlertAction(title: "cancel", style: .cancel, handler: nil))
         present(ac, animated: true)
     }
-
-    
 }
 
 extension HomeViewController: SingleVideoCollectionViewCellDelegate {

@@ -103,7 +103,6 @@ final class PosterCollectionViewCell: UICollectionViewCell {
     @objc func didTapUsername() {
         guard let email = self.email else {
             return}
-        print(email)
         guard let username = usernameLabel.text else {
             return}
         guard let region = self.region else {return}

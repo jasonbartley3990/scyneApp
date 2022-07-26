@@ -55,9 +55,6 @@ class SpotHeaderCollectionViewCell: UICollectionViewCell {
         moreButton.addTarget(self, action: #selector(didTapMore), for: .touchUpInside)
         scyneTitle.isUserInteractionEnabled = true
         imageView.isUserInteractionEnabled = true
-      
-        
-        
     }
     
     required init?(coder: NSCoder) {
@@ -91,7 +88,6 @@ class SpotHeaderCollectionViewCell: UICollectionViewCell {
     
     @objc func didTapMore() {
         guard let post = self.post else {
-            print("returned")
             return}
         delegate?.SpotHeaderCollectionViewDelegateDidTapMore(self, post: post)
     }

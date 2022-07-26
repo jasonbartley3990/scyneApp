@@ -19,7 +19,7 @@ class SpotIdSearchViewController: UIViewController, UISearchResultsUpdating, Spo
         
         (searchVC.searchResultsController as? SpotIdSearchResultsViewController)?.delegate = self
         searchVC.searchResultsUpdater = self
-        searchVC.searchBar.placeholder = "search for spots"
+        searchVC.searchBar.placeholder = "Search For Spots"
         navigationItem.searchController = searchVC
             
             

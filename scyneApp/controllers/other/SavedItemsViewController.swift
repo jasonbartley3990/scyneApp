@@ -16,7 +16,7 @@ class SavedItemsViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        title = "saved items"
+        title = "SAVED ITEMS"
         view.backgroundColor = .systemBackground
         grabItems()
         configureCollectionView()
@@ -37,8 +37,6 @@ class SavedItemsViewController: UIViewController {
             
             guard let fetchedItems = items else {return}
             
-            let fetchitemCount = fetchedItems.count
-            
             for _ in fetchedItems {
                 group.enter()
             }
@@ -56,16 +54,10 @@ class SavedItemsViewController: UIViewController {
             }
             
             group.notify(queue: .main, execute: {
-                print("here here")
                 self?.collectionView?.reloadData()
             })
-           
         })
-        
     }
-    
-    
-
 }
 
 extension SavedItemsViewController: UICollectionViewDelegate, UICollectionViewDataSource {

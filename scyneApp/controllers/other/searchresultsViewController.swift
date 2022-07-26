@@ -19,8 +19,8 @@ class searchresultsViewController: UIViewController, UITableViewDelegate, UITabl
     
     private let tableView: UITableView = {
         let tableView = UITableView()
-        tableView.isHidden = true
         tableView.register(NewConversationCell.self, forCellReuseIdentifier: NewConversationCell.identifier)
+        tableView.register(NoResultsTableViewCell.self, forCellReuseIdentifier: NoResultsTableViewCell.identifier)
         return tableView
     }()
 
@@ -31,17 +31,24 @@ class searchresultsViewController: UIViewController, UITableViewDelegate, UITabl
         tableView.frame = view.bounds
         tableView.delegate = self
         tableView.dataSource = self
-
-        // Do any additional setup after loading the view.
     }
     
 
     public func update(with results: [User]) {
         self.users = results
-        DispatchQueue.main.async {
-            self.tableView.reloadData()
-            self.tableView.isHidden = self.users.isEmpty
+        
+        if users.isEmpty {
+            let noResult = User(username: "", email: "no results", region: nil)
+            self.users.append(noResult)
+            DispatchQueue.main.async {
+                self.tableView.reloadData()
+            }
+        } else {
+            DispatchQueue.main.async {
+                self.tableView.reloadData()
+            }
         }
+        
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -49,14 +56,23 @@ class searchresultsViewController: UIViewController, UITableViewDelegate, UITabl
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: NewConversationCell.identifier, for: indexPath) as! NewConversationCell
-        //cell.textLabel?.text = users[indexPath.row].username
-        cell.configure(with: users[indexPath.row])
-        return cell
+        let item = self.users[indexPath.row]
+        if item.email == "no results" {
+            let cell = tableView.dequeueReusableCell(withIdentifier: NoResultsTableViewCell.identifier, for: indexPath) as! NoResultsTableViewCell
+            return cell
+        } else {
+            let cell = tableView.dequeueReusableCell(withIdentifier: NewConversationCell.identifier, for: indexPath) as! NewConversationCell
+            cell.configure(with: users[indexPath.row])
+            return cell
+        }
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
+        let item = self.users[indexPath.row]
+        if item.email == "no results" {
+            return
+        }
         delegate?.searchResultsViewController(self, didSelectResultWith: users[indexPath.row])
     }
     

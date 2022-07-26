@@ -32,7 +32,7 @@ class spotAddressNotFoundViewController: UIViewController, UITextFieldDelegate {
     private let label: UILabel = {
         let label = UILabel()
         label.text = "spot address could not be determined by gps, please manually enter the address"
-        label.textColor = .white
+        label.textColor = .label
         label.textAlignment = .center
         label.numberOfLines = 2
         return label
@@ -50,7 +50,7 @@ class spotAddressNotFoundViewController: UIViewController, UITextFieldDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        view.backgroundColor = .black
+        view.backgroundColor = .systemBackground
         view.addSubview(addressTextField)
         view.addSubview(label)
         addressTextField.delegate = self

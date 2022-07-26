@@ -34,12 +34,10 @@ class captionDetailViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        title = "caption"
+        title = "CAPTION"
         view.backgroundColor = .systemBackground
         view.addSubview(label)
         label.text = caption
-        
     }
     
     override func viewDidLayoutSubviews() {
@@ -63,9 +61,5 @@ class captionDetailViewController: UIViewController {
         
         label.frame = CGRect(x: 25, y: view.safeAreaInsets.top + 15, width: view.width - 50, height: labelHeight)
     }
-    
-
-    
-    
 
 }

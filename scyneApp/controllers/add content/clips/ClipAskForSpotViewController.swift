@@ -13,7 +13,7 @@ class ClipAskForSpotViewController: UIViewController {
         let label = UILabel()
         label.numberOfLines = 0
         label.textAlignment = .center
-        label.textColor = .white
+        label.textColor = .label
         label.font = .systemFont(ofSize: 18, weight: .regular)
         label.text = "do you want to tag a spot or park to post?\notherwise press next"
         return label
@@ -31,7 +31,7 @@ class ClipAskForSpotViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .black
+        view.backgroundColor = .systemBackground
         view.addSubview(searchForSpotButton)
         view.addSubview(label)
 

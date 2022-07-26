@@ -39,7 +39,7 @@ class ClipUploaderViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .black
+        view.backgroundColor = .systemBackground
         view.addSubview(button)
         button.addTarget(self, action: #selector(didTapButton), for: .touchUpInside)
         VideoHelper.startMediaBrowser(delegate: self, sourceType: .savedPhotosAlbum)

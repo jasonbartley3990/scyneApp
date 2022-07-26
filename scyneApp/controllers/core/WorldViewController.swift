@@ -91,7 +91,7 @@ class WorldViewController: UIViewController {
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        mapView.frame = view.bounds
+        mapView.frame = CGRect(x: 0, y: view.safeAreaInsets.top, width: view.width, height: (view.height - view.safeAreaInsets.top - view.safeAreaInsets.bottom - 5))
         let height = view.height/2.2
         let imageSize = view.width/3
         let buttonSize: CGFloat = 150
@@ -133,6 +133,7 @@ class WorldViewController: UIViewController {
         //top configuration
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .camera, target: self, action: #selector(didTapAdd))
         navigationItem.leftBarButtonItem = UIBarButtonItem(title: "refresh", style: .done, target: self, action: #selector(grabSpots))
+        
     }
     
     
@@ -142,7 +143,6 @@ class WorldViewController: UIViewController {
     private func configureLocationServices() {
         locationManager.delegate = self
         let status = CLLocationManager.authorizationStatus()
-        print(status)
         
         //if permissions not granted it will ask them to update location services
         
@@ -193,7 +193,6 @@ class WorldViewController: UIViewController {
     }
     
     @objc func stopUpdating() {
-        print("stopped")
         locationManager.stopUpdatingLocation()
     }
     
@@ -221,13 +220,18 @@ class WorldViewController: UIViewController {
     //MARK: grab spots
     
     @objc func grabSpots() {
-        print("functioned called")
         let center = mapView.region.center
         let lat = center.latitude
         let long = center.longitude
         DatabaseManager.shared.getAllSpotsForCenter(latitude: lat, longitude: long,  completion: { [weak self] spots in
-            DispatchQueue.main.async {
+            DispatchQueue.main.async { [weak self] in
                 self?.allSpots.append(contentsOf: spots)
+                if spots.isEmpty {
+                    let status = CLLocationManager.authorizationStatus()
+                    if status == .authorizedAlways || status == .authorizedWhenInUse {
+                        self?.noSpotsInAreaAlert()
+                    }
+                }
                 self?.addAnnotations()
             }
         })
@@ -242,7 +246,6 @@ class WorldViewController: UIViewController {
             guard let lat = spot.latitude else {return}
             guard let long = spot.longitude else {return}
             guard let type = spot.spotType else {return}
-            
             
             let annotiation = spotAnnotation(nickName: nickname, spottype: type, model: spot, coordinate: CLLocationCoordinate2D(latitude: lat, longitude: long))
             mapView.addAnnotation(annotiation)
@@ -345,9 +348,14 @@ class WorldViewController: UIViewController {
         ac.addAction(UIAlertAction(title: "cancel", style: .cancel))
         present(ac, animated: true)
     }
-
     
-    
+    private func noSpotsInAreaAlert() {
+        let ac = UIAlertController(title: "No spots in this area", message: nil, preferredStyle: .alert)
+        ac.addAction(UIAlertAction(title: "ok", style: .cancel))
+        DispatchQueue.main.async {
+            self.present(ac, animated: true)
+        }
+    }
 }
 
 //MARK: delegates
@@ -356,8 +364,6 @@ class WorldViewController: UIViewController {
 extension WorldViewController: CLLocationManagerDelegate {
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        
-        print("didUpdate")
         guard let latestLocation = locations.first else {return}
         if currentLocation == nil {
             zoomToLatestLocation(with: latestLocation.coordinate)
@@ -402,9 +408,7 @@ extension WorldViewController: MKMapViewDelegate {
         self.current = current
         guard let selectedSpot = allSpots.firstIndex(where: { [weak self] SpotModel in
             SpotModel.nickname == self?.current
-        }) else {return
-            print("issue selecting spot")
-        }
+        }) else {return}
         let spotname = allSpots[selectedSpot].nickname
         let images = allSpots[selectedSpot].photoUrls
         guard let firstImage = images.first else {return}
@@ -421,7 +425,6 @@ extension WorldViewController: MKMapViewDelegate {
 
 extension WorldViewController: SpotAnnotationViewDelegate {
     func SpoAnnotationViewDelegateDidTapButton(_ spotAnnotationView: SpotAnnotationView) {
-        print("tapped")
         guard let selectedSpot = allSpots.firstIndex(where: { [weak self] SpotModel in
             SpotModel.nickname == self?.current
         }) else {return
@@ -440,8 +443,6 @@ extension WorldViewController: SpotAnnotationViewDelegate {
         guard let spotId = spot.spotId else {return}
         guard let info = spot.caption else {return}
        
-        
-        
         let vc = SpotDetailViewController(spot: SpotModel(location: addy, spotPhotoUrl: spot.photoUrls, spotType: type, nickName: nickname, postedBy: spot.posterUsername, latitude: lat, longitude: long, spotId: spotId, savers:spot.savers, spotInfo: info, isSaved: saveStatus), post: spot)
         vc.completion = {
             bool in
@@ -462,9 +463,7 @@ extension WorldViewController: SpotPreviewViewDelegate {
         guard let selectedSpot = allSpots.firstIndex(where: { [weak self] SpotModel in
             SpotModel.nickname == self?.current
         }) else {
-            print("something went wrong")
             return
-
         }
         var spot = allSpots[selectedSpot]
         guard let email = UserDefaults.standard.string(forKey: "email") else {return}

@@ -16,18 +16,14 @@ class SearchForNewChatViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
         view.backgroundColor = .systemBackground
         (searchVC.searchResultsController as? searchresultsViewController)?.delegate = self
         searchVC.searchResultsUpdater = self
-        searchVC.searchBar.placeholder = "search for users..."
+        searchVC.searchBar.placeholder = "Search For Users..."
         navigationItem.searchController = searchVC
-        
     }
-    
-
-
 }
+
 extension SearchForNewChatViewController: searchResultsViewControllerDelegate, UISearchResultsUpdating {
     
     func updateSearchResults(for searchController: UISearchController) {
@@ -44,7 +40,6 @@ extension SearchForNewChatViewController: searchResultsViewControllerDelegate, U
     func searchResultsViewController(_ vc: searchresultsViewController, didSelectResultWith user: User) {
         dismiss(animated: true, completion: { [weak self] in
             self?.completion?(user)
-            
         })
     }
 }

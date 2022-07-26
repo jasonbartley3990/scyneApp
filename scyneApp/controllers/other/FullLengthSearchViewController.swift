@@ -17,10 +17,8 @@ class FullLengthSearchViewController: UIViewController, UISearchResultsUpdating 
         view.backgroundColor = .systemBackground
         (searchVC.searchResultsController as? FullLengthSearchResultsViewController)?.delegate = self
         searchVC.searchResultsUpdater = self
-        searchVC.searchBar.placeholder = "search for videos"
+        searchVC.searchBar.placeholder = "Search For Videos"
         navigationItem.searchController = searchVC
-        
-        // Do any additional setup after loading the view.
     }
     
     
@@ -34,11 +32,7 @@ class FullLengthSearchViewController: UIViewController, UISearchResultsUpdating 
                 vc.update(with: results)
             }
         }
-        
     }
-        
-
-
 }
 
 
@@ -54,10 +48,6 @@ extension FullLengthSearchViewController: FullLengthSearchResultsViewControllerD
         
         DatabaseManager.shared.incrementFullLengthVideoCount(video: video.videoId)
     }
-    
-  
-    
-    
 }
 
     

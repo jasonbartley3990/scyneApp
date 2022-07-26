@@ -30,7 +30,7 @@ class ClipCheckPermisssionsViewController: UIViewController {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFill
         imageView.image = UIImage(systemName: "photo.on.rectangle.fill")
-        imageView.tintColor = .white
+        imageView.tintColor = .label
         imageView.layer.masksToBounds = true
         return imageView
     }()
@@ -38,7 +38,7 @@ class ClipCheckPermisssionsViewController: UIViewController {
     private let label: UILabel = {
         let label = UILabel()
         label.font = .systemFont(ofSize: 18, weight: .regular)
-        label.textColor = .white
+        label.textColor = .systemBackground
         label.textAlignment = .center
         label.text = "please update photo library access"
         label.numberOfLines = 0
@@ -56,7 +56,7 @@ class ClipCheckPermisssionsViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .black
+        view.backgroundColor = .systemBackground
         view.addSubview(button)
         view.addSubview(label)
         view.addSubview(imageView)
@@ -123,7 +123,6 @@ class ClipCheckPermisssionsViewController: UIViewController {
     }
     
     private func nextViewController() {
-        print("made it")
         let vc = ClipAskForSpotViewController()
         navigationController?.pushViewController(vc, animated: true)
         

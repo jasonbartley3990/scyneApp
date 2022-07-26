@@ -29,7 +29,7 @@ class SpotAskForMorePhotosViewController: UIViewController {
     private let askLabel: UILabel = {
         let label = UILabel()
         label .textAlignment = .center
-        label.textColor = .white
+        label.textColor = .label
         label.font = .systemFont(ofSize: 18, weight: .light)
         label.text = "do you wish to retake the photo?\notherwise press next"
         label.numberOfLines = 2
@@ -60,7 +60,7 @@ class SpotAskForMorePhotosViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .black
+        view.backgroundColor = .systemBackground
         view.addSubview(imageView)
         view.addSubview(askLabel)
         view.addSubview(retakeButton)

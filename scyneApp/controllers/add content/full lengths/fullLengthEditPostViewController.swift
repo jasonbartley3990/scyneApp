@@ -29,7 +29,7 @@ class fullLengthEditPostViewController: UIViewController, UITextViewDelegate {
     private let label: UILabel = {
         let label = UILabel()
         label.textAlignment = .center
-        label.textColor = .white
+        label.textColor = .label
         label.text = "write a description about your video"
         return label
     }()
@@ -37,7 +37,7 @@ class fullLengthEditPostViewController: UIViewController, UITextViewDelegate {
     private let waitLabel: UILabel = {
         let label = UILabel()
         label.textAlignment = .center
-        label.textColor = .white
+        label.textColor = .label
         label.font = .systemFont(ofSize: 15, weight: .thin)
         label.text = "larger videos take a while to post"
         return label
@@ -67,7 +67,7 @@ class fullLengthEditPostViewController: UIViewController, UITextViewDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .black
+        view.backgroundColor = .systemBackground
         view.addSubview(imageView)
         imageView.image = image
         view.addSubview(label)

@@ -23,7 +23,6 @@ class SpotAnnotationView: MKMarkerAnnotationView {
             guard let _myAnnotation = newValue as? spotAnnotation else {return }
             canShowCallout = true
             calloutOffset = CGPoint(x: -5, y: 5)
-            //rightCalloutAccessoryView = UIButton(type: .detailDisclosure)
             let mapButton = UIButton(frame: CGRect(origin: CGPoint.zero, size: CGSize(width: 30, height: 30)))
             mapButton.addTarget(self, action: #selector(didTapMapButton), for: .touchUpInside)
             mapButton.setBackgroundImage(UIImage(systemName: ""), for: .normal)
@@ -38,8 +37,8 @@ class SpotAnnotationView: MKMarkerAnnotationView {
         }
     }
     
-@objc func didTapMapButton() {
-    delegate?.SpoAnnotationViewDelegateDidTapButton(self)
+    @objc func didTapMapButton() {
+        delegate?.SpoAnnotationViewDelegateDidTapButton(self)
     
-}
+    }
 }

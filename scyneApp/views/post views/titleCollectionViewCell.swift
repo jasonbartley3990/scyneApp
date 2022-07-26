@@ -19,6 +19,8 @@ class titleCollectionViewCell: UICollectionViewCell {
     private let label: UILabel = {
         let label = UILabel()
         label.font = .systemFont(ofSize: 18, weight: .semibold)
+        label.textAlignment = .center
+        label.textColor = .label
         return label
     }()
     
@@ -27,8 +29,6 @@ class titleCollectionViewCell: UICollectionViewCell {
         contentView.addSubview(label)
         let tap = UITapGestureRecognizer(target: self, action: #selector(didTapTitle))
         label.addGestureRecognizer(tap)
-        
-        
     }
     
     required init?(coder: NSCoder) {
@@ -37,17 +37,14 @@ class titleCollectionViewCell: UICollectionViewCell {
     
     override func layoutSubviews() {
         super.layoutSubviews()
-        label.sizeToFit()
-        label.frame = CGRect(x: (contentView.width - label.width)/2, y: 2, width: label.width , height: contentView.height)
+        label.frame = CGRect(x: 10, y: 2, width: contentView.width - 20, height: contentView.height)
         let tap = UITapGestureRecognizer(target: self, action: #selector(didTapTitle))
         label.addGestureRecognizer(tap)
         label.isUserInteractionEnabled = true
-        
     }
     
     
     @objc func didTapTitle() {
-        print("was tapped um")
         delegate?.titleCollectionViewCellDelegateDidTapTitle(self)
     }
     

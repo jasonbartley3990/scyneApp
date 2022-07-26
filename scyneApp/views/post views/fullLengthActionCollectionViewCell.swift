@@ -75,8 +75,6 @@ class fullLengthActionCollectionViewCell: UICollectionViewCell {
         return label
     }()
     
-    
-    
     override init(frame: CGRect) {
         super.init(frame: frame)
         contentView.clipsToBounds = true
@@ -150,11 +148,8 @@ class fullLengthActionCollectionViewCell: UICollectionViewCell {
     
     public func updateLikeLabel(with email: String) {
         if self.isLiked {
-            print("was liked")
             self.likers.append(email)
-            
         } else {
-            print("was unliked")
             self.likers.removeAll { $0 == email }
         }
 

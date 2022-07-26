@@ -142,15 +142,10 @@ final class PostActionCollectionViewCell: UICollectionViewCell {
     
     public func updateLikeLabel(with email: String) {
         if self.isLiked {
-            print("was liked")
             self.likeCount += 1
-            print(self.likeCount)
             self.likers.append(email)
-            
         } else {
-            print("was unliked")
             self.likeCount -= 1
-            print(self.likeCount)
             self.likers.removeAll { $0 == email }
         }
 

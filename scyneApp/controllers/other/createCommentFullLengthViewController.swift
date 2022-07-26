@@ -28,7 +28,7 @@ class createCommentFullLengthViewController: UIViewController {
     
     private let label: UILabel = {
         let label = UILabel()
-        label.text = "type your comment"
+        label.text = "Type your comment"
         label.textAlignment = .center
         label.font = .systemFont(ofSize: 18, weight: .light)
         return label
@@ -72,8 +72,8 @@ class createCommentFullLengthViewController: UIViewController {
         if textView.text == "" {
             spinner.dismiss()
             DispatchQueue.main.async {
-                let ac = UIAlertController(title: "please enter something", message: nil, preferredStyle: .alert)
-                ac.addAction(UIAlertAction(title: "ok", style: .cancel))
+                let ac = UIAlertController(title: "Please enter something", message: nil, preferredStyle: .alert)
+                ac.addAction(UIAlertAction(title: "Ok", style: .cancel))
                 self.present(ac, animated: true)
             }
             return
@@ -86,8 +86,8 @@ class createCommentFullLengthViewController: UIViewController {
         guard !(commentText.count > 300) else {
             DispatchQueue.main.async {
                 self.spinner.dismiss()
-                let ac = UIAlertController(title: "max 300 characters", message: nil, preferredStyle: .alert)
-                ac.addAction(UIAlertAction(title: "ok", style: .cancel))
+                let ac = UIAlertController(title: "Max 300 characters", message: nil, preferredStyle: .alert)
+                ac.addAction(UIAlertAction(title: "Ok", style: .cancel))
                 self.present(ac, animated: true)
             }
             return
@@ -109,17 +109,13 @@ class createCommentFullLengthViewController: UIViewController {
                 
             } else {
                 DispatchQueue.main.async {
-                    let ac = UIAlertController(title: "something went wrong", message: "try agian", preferredStyle: .alert)
-                    ac.addAction(UIAlertAction(title: "cancel", style: .cancel))
+                    let ac = UIAlertController(title: "Something went wrong", message: "Try again", preferredStyle: .alert)
+                    ac.addAction(UIAlertAction(title: "Cancel", style: .cancel))
                     self?.present(ac, animated: true)
                 }
                 return
             }
-            
         })
     }
-
-
-    
 }
 

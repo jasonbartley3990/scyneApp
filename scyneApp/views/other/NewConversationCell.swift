@@ -26,8 +26,6 @@ class NewConversationCell: UITableViewCell {
         return label
     }()
     
-
-    
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         contentView.addSubview(userImageView)
@@ -45,9 +43,13 @@ class NewConversationCell: UITableViewCell {
         
     }
     
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        userImageView.image = nil
+    }
+    
     public func configure(with model: User) {
         self.usernameLabel.text = model.username
-        print(model.email)
         
         let image = StorageManager.shared.profilePictureUrl(for: model.email, completion: {
             [weak self] url in
@@ -56,9 +58,6 @@ class NewConversationCell: UITableViewCell {
                 }
             }
         )
-            
-        
     }
-    
 }
 

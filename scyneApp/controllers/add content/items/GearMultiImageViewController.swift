@@ -41,7 +41,7 @@ class GearMultiImageViewController: UIViewController {
         let label = UILabel()
         label.numberOfLines = 0
         label.textAlignment = .center
-        label.textColor = .white
+        label.textColor = .label
         label.font = .systemFont(ofSize: 18, weight: .regular)
         label.text = "do you wish to add more photos to your post? (up to 8)\notherwise press next"
         return label
@@ -59,7 +59,7 @@ class GearMultiImageViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .black
+        view.backgroundColor = .systemBackground
         view.addSubview(scrollView)
         view.addSubview(pageControl)
         view.addSubview(moreButton)

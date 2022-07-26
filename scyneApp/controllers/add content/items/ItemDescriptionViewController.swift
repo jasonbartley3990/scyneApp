@@ -33,7 +33,7 @@ class ItemDescriptionViewController: UIViewController, UITextViewDelegate {
     private let label: UILabel = {
         let label = UILabel()
         label.textAlignment = .center
-        label.textColor = .white
+        label.textColor = .label
         label.text = "write a description about what you are selling"
         label.numberOfLines = 2
         label.font = .systemFont(ofSize: 18, weight: .light)
@@ -53,7 +53,7 @@ class ItemDescriptionViewController: UIViewController, UITextViewDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .black
+        view.backgroundColor = .systemBackground
         view.addSubview(label)
         view.addSubview(textView)
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "post", style: .done, target: self, action: #selector(didTapPost))

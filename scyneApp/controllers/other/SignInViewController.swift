@@ -23,7 +23,7 @@ class SignInViewController: UIViewController, UITextFieldDelegate {
     
     private let emailField: ScyneTextField = {
         let field = ScyneTextField()
-        field.placeholder = "email address"
+        field.placeholder = "Email Address"
         field.keyboardType = .emailAddress
         field.returnKeyType = .next
         field.autocorrectionType = .no
@@ -32,7 +32,7 @@ class SignInViewController: UIViewController, UITextFieldDelegate {
     
     private let passwordField: ScyneTextField = {
         let field = ScyneTextField()
-        field.placeholder = "password"
+        field.placeholder = "Password"
         field.keyboardType = .default
         field.returnKeyType = .continue
         field.autocorrectionType = .no
@@ -42,7 +42,7 @@ class SignInViewController: UIViewController, UITextFieldDelegate {
     
     private let signInButton: UIButton = {
         let button = UIButton()
-        button.setTitle("sign in", for: .normal)
+        button.setTitle("Sign In", for: .normal)
         button.backgroundColor = .systemBlue
         button.layer.cornerRadius = 8
         button.layer.masksToBounds = true
@@ -51,7 +51,7 @@ class SignInViewController: UIViewController, UITextFieldDelegate {
     
     private let createAccountButton: UIButton = {
         let button = UIButton()
-        button.setTitle("create account", for: .normal)
+        button.setTitle("Create Account", for: .normal)
         button.setTitleColor(.white, for: .normal)
         button.isUserInteractionEnabled = true
         return button
@@ -59,7 +59,7 @@ class SignInViewController: UIViewController, UITextFieldDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        title = "sign in"
+        title = "SIGN IN"
         view.backgroundColor = .black
         view.addSubview(scyneImage)
         view.addSubview(emailField)
@@ -112,7 +112,7 @@ class SignInViewController: UIViewController, UITextFieldDelegate {
               !email.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty,
               !password.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty, password.count >= 8 else {
             DispatchQueue.main.async {
-                let ac = UIAlertController(title: "invalid fields", message: "please make sure all fields are filled out correctly", preferredStyle: .alert)
+                let ac = UIAlertController(title: "Invalid fields", message: "Please make sure all fields are filled out correctly", preferredStyle: .alert)
                 ac.addAction(UIAlertAction(title: "ok", style: .cancel, handler: nil))
                 self.present(ac, animated: true)
             }
@@ -135,7 +135,7 @@ class SignInViewController: UIViewController, UITextFieldDelegate {
                         self?.present(vc, animated: true)
                     }
                 case .failure(let error):
-                    let ac = UIAlertController(title: "wrong username or password", message: nil, preferredStyle: .alert)
+                    let ac = UIAlertController(title: "Wrong username or password", message: nil, preferredStyle: .alert)
                     ac.addAction(UIAlertAction(title: "ok", style: .cancel, handler: nil))
                     DispatchQueue.main.async {
                         self?.present(ac, animated: true)
@@ -149,13 +149,8 @@ class SignInViewController: UIViewController, UITextFieldDelegate {
     }
     
     @objc func didTapCreateAccount() {
-        
-        let vc = SelectRegionViewController(name: "hi")
+        let vc = SelectRegionViewController(name: "")
         navigationController?.pushViewController(vc, animated: true)
-        
-
     }
-    
-    
 }
 

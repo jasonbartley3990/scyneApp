@@ -138,17 +138,11 @@ class NormalPostActionsCollectionViewCell: UICollectionViewCell {
     
     public func updateNormalLikeLabel(with email: String) {
         if self.isLiked {
-            print("was liked")
             self.likeCount += 1
-            print(self.likeCount)
             self.likesLabel.text = "\(self.likeCount) likes"
             self.likers.append(email)
-            
         } else {
-            print("was unliked")
-            print(self.likeCount)
             self.likeCount -= 1
-            print(self.likeCount)
             self.likesLabel.text = "\(self.likeCount) likes"
             self.likers.removeAll { $0 == email }
         }

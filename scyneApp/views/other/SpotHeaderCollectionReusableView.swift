@@ -319,10 +319,7 @@ class SpotHeaderCollectionReusableView: UICollectionReusableView {
     }
     
     @objc func didTapPoster() {
-        print("aye")
-        guard let post = self.post else {
-            print("returned")
-            return}
+        guard let post = self.post else {return}
         delegate?.spotHeaderCollectionReusableViewDidTapPoster(self, username: post.posterUsername, email: post.posterEmail, region: post.region)
     }
     

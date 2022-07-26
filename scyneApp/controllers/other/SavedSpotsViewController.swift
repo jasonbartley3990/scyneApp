@@ -15,7 +15,7 @@ class SavedSpotsViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        title = "saved spots"
+        title = "SAVED SPOTS"
         view.backgroundColor = .systemBackground
         
         grabSpots()
@@ -40,8 +40,6 @@ class SavedSpotsViewController: UIViewController {
             guard let fetchedSpots = spots else {return}
             
             for spot in fetchedSpots {
-                print("hey this one")
-                print(spot)
                 group.enter()
             }
             
@@ -60,12 +58,8 @@ class SavedSpotsViewController: UIViewController {
             group.notify(queue: .main, execute: {
                 self?.collectionView?.reloadData()
             })
-           
         })
-        
     }
-    
-   
 }
 
 extension SavedSpotsViewController: UICollectionViewDelegate, UICollectionViewDataSource {

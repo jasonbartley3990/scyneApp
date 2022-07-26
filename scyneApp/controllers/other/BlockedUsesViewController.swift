@@ -22,7 +22,7 @@ class BlockedUsesViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
         view.addSubview(tableView)
-        title = "blocked users"
+        title = "BLOCKED USERS"
         tableView.delegate = self
         tableView.dataSource = self
         tableView.frame = view.bounds
@@ -33,15 +33,8 @@ class BlockedUsesViewController: UIViewController {
             DispatchQueue.main.async {
                 self?.tableView.reloadData()
             }
-            
         })
-        
     }
-    
-    
-
-    
-
 }
 
 extension BlockedUsesViewController: UITableViewDelegate, UITableViewDataSource {
@@ -56,8 +49,8 @@ extension BlockedUsesViewController: UITableViewDelegate, UITableViewDataSource 
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let ac = UIAlertController(title: "unblock this user", message: nil, preferredStyle: .alert)
-        ac.addAction(UIAlertAction(title: "unblock", style: .default, handler: {
+        let ac = UIAlertController(title: "Unblock this user", message: nil, preferredStyle: .alert)
+        ac.addAction(UIAlertAction(title: "Unblock", style: .default, handler: {
             [weak self] _ in
             guard let currentEmail = UserDefaults.standard.string(forKey: "email") else {return}
             guard let currentBlockUser = self?.blockedUsers[indexPath.row] else {return}
@@ -66,16 +59,12 @@ extension BlockedUsesViewController: UITableViewDelegate, UITableViewDataSource 
                 NotificationCenter.default.post(name: Notification.Name("userDidChangeBlock"), object: nil)
             })
         }))
-        ac.addAction(UIAlertAction(title: "cancel", style: .cancel, handler: nil))
+        ac.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
         present(ac, animated: true)
         tableView.deselectRow(at: indexPath, animated: true)
-        
-        
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 90
     }
-
-    
 }

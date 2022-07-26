@@ -70,12 +70,8 @@ class SinglePinViewController: UIViewController {
     
     private func zoom() {
         
-        guard let lat = spot.latitude else {
-            print("failed")
-            return}
-        guard let long = spot.longitude else {
-            print("failed")
-            return}
+        guard let lat = spot.latitude else {return}
+        guard let long = spot.longitude else {return}
         
         let coordinate = CLLocationCoordinate2D(latitude: lat, longitude: long)
         
@@ -114,7 +110,6 @@ extension SinglePinViewController: MKMapViewDelegate {
 
 extension SinglePinViewController: SpotPreviewViewDelegate {
     func SpotPreviewViewDelegateDidTapMoreButton(_ SpotPreviewView: SpotPreviewView) {
-        print(current)
         
         guard let email = UserDefaults.standard.string(forKey: "email") else {return}
         
@@ -140,9 +135,6 @@ extension SinglePinViewController: SpotPreviewViewDelegate {
             })
         }
         childVC.view.isUserInteractionEnabled = false
-        
-    
-    
-}
+    }
 }
 

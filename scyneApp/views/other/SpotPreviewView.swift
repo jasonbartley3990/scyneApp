@@ -91,7 +91,6 @@ class SpotPreviewView: UIViewController {
     }
     
     @objc func didTapClose() {
-        print("did tap")
         delegate?.SpotPreviewViewDelegateDidTapClose(self)
     }
     

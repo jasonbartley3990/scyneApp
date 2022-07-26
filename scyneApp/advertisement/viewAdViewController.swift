@@ -34,7 +34,6 @@ class viewAdViewController: UIViewController, UICollectionViewDelegate, UICollec
     }
     
     func configureCollectionView() {
-        print("called")
         let sectionHeight: CGFloat = 225 + view.width
         
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewCompositionalLayout(sectionProvider: {
@@ -87,7 +86,6 @@ class viewAdViewController: UIViewController, UICollectionViewDelegate, UICollec
         collectionView.register(AdvertisementHeaderCollectionViewCell.self, forCellWithReuseIdentifier: AdvertisementHeaderCollectionViewCell.identifier)
         collectionView.register(AdvertisementWebLinkCollectionViewCell.self, forCellWithReuseIdentifier: AdvertisementWebLinkCollectionViewCell.identifier)
         self.collectionView = collectionView
-        print("here")
     }
     
     func getAd() {
@@ -106,11 +104,9 @@ class viewAdViewController: UIViewController, UICollectionViewDelegate, UICollec
             let type = ad.adType
             
             guard let firstUrl = ad.Urls.first else {
-                print("no first url")
                 return}
             
             guard let vidUrl = URL(string: firstUrl) else {
-                print("no vid url")
                 return}
             
             let group = DispatchGroup()
@@ -130,7 +126,7 @@ class viewAdViewController: UIViewController, UICollectionViewDelegate, UICollec
                 self?.AllAds.append(adData)
                 self?.AllAds.append(adData)
                 group.leave()
-                print("done")
+               
             }
             
             if type == "photo" {
@@ -147,7 +143,6 @@ class viewAdViewController: UIViewController, UICollectionViewDelegate, UICollec
                 self?.AllAds.append(adData)
                 self?.AllAds.append(adData)
                 group.leave()
-                print("done")
             }
             
             group.notify(queue: .main, execute: {
@@ -293,7 +288,6 @@ class viewAdViewController: UIViewController, UICollectionViewDelegate, UICollec
         
         if cell.reuseIdentifier == SingleVideoCollectionViewCell.identifier {
             guard let cell = cell as? SingleVideoCollectionViewCell else {return}
-            print("video paused bitch")
             cell.pauseVideo()
             cell.stopTimer()
         }
@@ -306,7 +300,6 @@ class viewAdViewController: UIViewController, UICollectionViewDelegate, UICollec
         
         if cell.reuseIdentifier == SingleVideoCollectionViewCell.identifier {
             guard let cell = cell as? SingleVideoCollectionViewCell else {return}
-            print("video will play")
             currentIndex = indexPath.section
             cell.index = indexPath.section
             if isCurrentViewController {
@@ -480,7 +473,6 @@ extension viewAdViewController: AdvertisementWebLinkCollectionViewCellDelegate {
                present(vc, animated: true)
             }
         } else {
-            print("cant opemn url")
             let ac = UIAlertController(title: "invalid url", message: nil, preferredStyle: .alert)
             ac.addAction(UIAlertAction(title: "ok", style: .cancel, handler: nil))
             present(ac, animated: true)
@@ -511,12 +503,10 @@ extension viewAdViewController: AdvertisementHeaderDelegate {
 
 extension viewAdViewController: MultiImageViewDelegate {
     func MultiImageViewDelegateDidScroll(_ cell: MultiPhotoCollectionViewCell, page: Int, index: Int, type: String) {
-        print(cell.type)
         
         if cell.type == "spot" {
             let actionIndex = IndexPath(row: 2, section: index)
             guard let actionCell = collectionView?.cellForItem(at: actionIndex) as? SpotActionsCollectionViewCell else {return}
-            print(actionCell)
             actionCell.pageTurner.currentPage = page
             
         }

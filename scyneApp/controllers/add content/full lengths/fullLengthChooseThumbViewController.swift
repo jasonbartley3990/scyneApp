@@ -31,7 +31,7 @@ class fullLengthChooseThumbViewController: UIViewController {
     private let infoLabel: UILabel = {
         let label = UILabel()
         label.textAlignment = .center
-        label.textColor = .white
+        label.textColor = .label
         label.text = "select a thumbnail that will represent your video in the gallery scroll"
         label.font = .systemFont(ofSize: 17, weight: .light)
         label.numberOfLines = 2
@@ -58,7 +58,7 @@ class fullLengthChooseThumbViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .black
+        view.backgroundColor = .systemBackground
         view.addSubview(VideoSelectedlabel)
         view.addSubview(imageView)
         view.addSubview(infoLabel)

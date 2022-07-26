@@ -43,11 +43,9 @@ class NormalPostDetailViewController: UIViewController, UICollectionViewDelegate
                     self?.collectionView?.reloadData()
                 }
             } else {
-                print("something went wrong")
+                self?.showAlert()
             }
-        
         })
-        
     }
     
     override func viewDidLayoutSubviews() {
@@ -55,21 +53,29 @@ class NormalPostDetailViewController: UIViewController, UICollectionViewDelegate
         collectionView?.frame = view.bounds
     }
     
+    private func showAlert() {
+        let ac = UIAlertController(title: "Something went wrong", message: "Please try again later", preferredStyle: .alert)
+        ac.addAction(UIAlertAction(title: "Ok", style: .cancel))
+        DispatchQueue.main.async {
+            self.present(ac,animated: true)
+        }
+    }
+    
     private func blockAUser(email: String, currentEmail: String) {
-        let ac = UIAlertController(title: "are you sure?", message: nil, preferredStyle: .alert)
-        ac.addAction(UIAlertAction(title: "block", style: .destructive, handler: {
+        let ac = UIAlertController(title: "Are you sure?", message: nil, preferredStyle: .alert)
+        ac.addAction(UIAlertAction(title: "Block", style: .destructive, handler: {
             [weak self] _ in
             DatabaseManager.shared.blockUser(email: email, currentEmail: currentEmail, completion: {
                 [weak self] success in
                 if success {
                     NotificationCenter.default.post(name: Notification.Name("userDidChangeBlock"), object: nil)
-                    let ac = UIAlertController(title: "user blocked", message: "when app refreshes you will no longer see there content", preferredStyle: .alert)
+                    let ac = UIAlertController(title: "user blocked", message: "When app refreshes you will no longer see there content", preferredStyle: .alert)
                     ac.addAction(UIAlertAction(title: "ok", style: .cancel, handler: nil))
                     self?.present(ac, animated: true)
                 }
             })
         }))
-        ac.addAction(UIAlertAction(title: "cancel", style: .cancel, handler: nil))
+        ac.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
         present(ac, animated: true)
     }
     
@@ -79,7 +85,6 @@ class NormalPostDetailViewController: UIViewController, UICollectionViewDelegate
         StorageManager.shared.profilePictureUrl(for: post.posterEmail) { [weak self] profilePictureUrl in
             
             guard let profilePic = profilePictureUrl else {
-                print("failer with profile photo")
                 completion(false)
                 return}
             
@@ -106,11 +111,8 @@ class NormalPostDetailViewController: UIViewController, UICollectionViewDelegate
                         ]
                     self?.viewModels.append(clipData)
                     completion(true)
-        
             })
         }
-            
-    
     }
     
     
@@ -119,9 +121,6 @@ class NormalPostDetailViewController: UIViewController, UICollectionViewDelegate
         
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewCompositionalLayout(sectionProvider: {
             index, _ -> NSCollectionLayoutSection? in
-            
-            //item
-            
             
             let posterItem = NSCollectionLayoutItem(layoutSize: NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .absolute(60))
             )
@@ -136,7 +135,6 @@ class NormalPostDetailViewController: UIViewController, UICollectionViewDelegate
             
             let timeStampItem = NSCollectionLayoutItem(layoutSize: NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .absolute(20)))
 
-            //group
             let group = NSCollectionLayoutGroup.vertical(layoutSize: NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .absolute(sectionHeight)), subitems: [posterItem, postItem, actionItem, titleItem, captionItem, timeStampItem]
             )
             //section
@@ -278,32 +276,27 @@ class NormalPostDetailViewController: UIViewController, UICollectionViewDelegate
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: pageTurnerCollectionViewCell.identifier, for: indexPath) as? pageTurnerCollectionViewCell else { fatalError() }
             cell.configure(with: viewModel)
             return cell
-    }
+        }
         
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return viewModels[section].count
     }
-
-   
-
 }
 
 extension NormalPostDetailViewController: PosterCollectionViewCellDelegate {
     func posterCollectionViewCellDidTapMore(_ cell: PosterCollectionViewCell, post: Post, type: String, index: Int) {
-        print("tapped more")
-        
         guard let currentEmail = UserDefaults.standard.string(forKey: "email") else {return}
         
         if currentEmail == post.posterEmail {
-            let sheet = UIAlertController(title: "post action", message: nil, preferredStyle: .actionSheet)
-            sheet.addAction(UIAlertAction(title: "cancel", style: .cancel))
-            sheet.addAction(UIAlertAction(title: "delete post", style: .default, handler: {
+            let sheet = UIAlertController(title: "Post action", message: nil, preferredStyle: .actionSheet)
+            sheet.addAction(UIAlertAction(title: "Cancel", style: .cancel))
+            sheet.addAction(UIAlertAction(title: "Delete post", style: .default, handler: {
                 [weak self] _ in
                 if type == "clip" {
-                    let ac = UIAlertController(title: "are you sure?", message: nil, preferredStyle: .alert)
-                    ac.addAction(UIAlertAction(title: "delete", style: .default, handler: { [weak self] _ in
+                    let ac = UIAlertController(title: "Are you sure?", message: nil, preferredStyle: .alert)
+                    ac.addAction(UIAlertAction(title: "Delete", style: .default, handler: { [weak self] _ in
                         let postId = post.postId
                         DatabaseManager.shared.deleteClipOrNormalPost(postId: postId, completion: {
                             [weak self] success in
@@ -316,7 +309,7 @@ extension NormalPostDetailViewController: PosterCollectionViewCellDelegate {
                             }
                         })
                     }))
-                    ac.addAction(UIAlertAction(title: "cancel", style: .cancel, handler: nil))
+                    ac.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
                     self?.present(ac, animated: true)
                 }
                 
@@ -324,19 +317,19 @@ extension NormalPostDetailViewController: PosterCollectionViewCellDelegate {
             present(sheet, animated: true)
             
         } else {
-            let sheet = UIAlertController(title: "post action", message: nil, preferredStyle: .actionSheet)
-            sheet.addAction(UIAlertAction(title: "cancel", style: .cancel))
-            sheet.addAction(UIAlertAction(title: "block user", style: .default, handler: {
+            let sheet = UIAlertController(title: "Post action", message: nil, preferredStyle: .actionSheet)
+            sheet.addAction(UIAlertAction(title: "Cancel", style: .cancel))
+            sheet.addAction(UIAlertAction(title: "Block user", style: .default, handler: {
                 [weak self] _ in
                 guard let currentEmail = UserDefaults.standard.string(forKey: "email") else {return}
                 self?.blockAUser(email: post.posterEmail, currentEmail: currentEmail)
             }))
-            sheet.addAction(UIAlertAction(title: "report post", style: .destructive, handler: {
+            sheet.addAction(UIAlertAction(title: "Report post", style: .destructive, handler: {
                 [weak self] _ in
                 DatabaseManager.shared.reportPost(post: post, completion: {
                     [weak self] success in
-                    let ac = UIAlertController(title: "post reported", message: nil, preferredStyle: .alert)
-                    ac.addAction(UIAlertAction(title: "ok", style: .cancel))
+                    let ac = UIAlertController(title: "Post reported", message: nil, preferredStyle: .alert)
+                    ac.addAction(UIAlertAction(title: "Ok", style: .cancel))
                     DispatchQueue.main.async {
                         self?.present(ac,animated: true)
                     }
@@ -346,8 +339,6 @@ extension NormalPostDetailViewController: PosterCollectionViewCellDelegate {
             
             present(sheet, animated: true)
         }
-        
-        
     }
     
     func posterCollectionViewCellDidUsername(_ cell: PosterCollectionViewCell, email: String, username: String, region: String) {
@@ -356,23 +347,18 @@ extension NormalPostDetailViewController: PosterCollectionViewCellDelegate {
         
     }
     
-    
 }
 
 extension NormalPostDetailViewController: MultiImageViewDelegate {
     func MultiImageViewDelegateDidScroll(_ cell: MultiPhotoCollectionViewCell, page: Int, index: Int, type: String) {
         let actionIndex = IndexPath(row: 2, section: 0)
-        print("here")
         guard let actionCell = collectionView?.cellForItem(at: actionIndex) as? NormalPostActionsCollectionViewCell else {
-            print("returned")
             return}
         actionCell.pageTurner.currentPage = page
         
     }
     
     func MultiImageViewDelegateDidDoubleTap(_ cell: MultiPhotoCollectionViewCell, post: Post, index: Int, type: String) {
-        
-        
         guard let currentEmail = UserDefaults.standard.string(forKey: "email") else {return}
         
         let actionIndex = IndexPath(row: 2, section: index)
@@ -407,12 +393,8 @@ extension NormalPostDetailViewController: MultiImageViewDelegate {
             NotificationCenter.default.post(name: Notification.Name("didChangePost"), object: nil)
             
         }
-        
-        
-        
     }
-    
-    
+
 }
 
 extension NormalPostDetailViewController: normalPostActionCollectionViewCellDelegate {
@@ -444,7 +426,6 @@ extension NormalPostDetailViewController: normalPostActionCollectionViewCellDele
             self.viewModels[0][2] = HomeFeedCellType.normalPostAction(viewModel: normalPostActionsCollectionViewCellViewModel(isLiked: true, likeCount: count, post: post, likers: likers, numberOfPhotos: post.urlCount))
         }
         
-        
     }
     
     func normalPostActionsCollectionViewCellDidTapComment(_ cell: NormalPostActionsCollectionViewCell, post: Post) {
@@ -458,8 +439,6 @@ extension NormalPostDetailViewController: normalPostActionCollectionViewCellDele
         let vc = likerTableViewController(likers: self.likers, likeCount: self.likers.count)
         navigationController?.pushViewController(vc, animated: true)
     }
-    
-    
 }
 
 extension NormalPostDetailViewController: PostCaptionCollectionViewCellDelegate {
@@ -468,6 +447,4 @@ extension NormalPostDetailViewController: PostCaptionCollectionViewCellDelegate 
         let vc = captionDetailViewController(caption: cap)
         navigationController?.pushViewController(vc, animated: true)
     }
-    
-    
 }

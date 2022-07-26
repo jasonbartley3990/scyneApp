@@ -76,20 +76,20 @@ final class PostCollectionViewCell: UICollectionViewCell {
         
         guard let post = self.post else {return}
         
-//        heartImageView.isHidden = false
-//        UIView.animate(withDuration: 0.4) {
-//            self.heartImageView.alpha = 1
-//        } completion: {[weak self] done in
-//            if done {
-//                UIView.animate(withDuration: 0.4) {
-//                    self?.heartImageView.alpha = 0
-//                } completion: { done in
-//                    if done {
-//                        self?.heartImageView.isHidden = true
-//                }
-//                }
-//        }
-//        }
+        heartImageView.isHidden = false
+        UIView.animate(withDuration: 0.4) {
+            self.heartImageView.alpha = 1
+        } completion: {[weak self] done in
+            if done {
+                UIView.animate(withDuration: 0.4) {
+                    self?.heartImageView.alpha = 0
+                } completion: { done in
+                    if done {
+                        self?.heartImageView.isHidden = true
+                }
+                }
+        }
+        }
         delegate?.postCollectionViewCellDidLike(self, post: post, index: self.index)
         
         
